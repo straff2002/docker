@@ -9,5 +9,11 @@
   "author": "Felix Böhm",
   "dependencies": {
     "protractor": "^1.0.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.7",
+    "gulp-protractor-qa": "^0.1.17",
+    "jasmine-spec-reporter": "^0.6.0",
+    "phantomjs": "^1.9.7-15"
   }
 }
