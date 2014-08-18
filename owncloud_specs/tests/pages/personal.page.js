@@ -8,6 +8,7 @@
     this.oldPasswordInput = element(by.id('pass1'));
     this.newPasswordInput = element(by.id('pass2'));
     this.newPasswordButton = element(by.id('passwordbutton'));
+
     this.passwordChanged = element(by.id('passwordchanged'));
     this.passwordError = element(by.id('passworderror'));
     
@@ -37,6 +38,12 @@
     this.oldPasswordInput.sendKeys(oldPass);
     this.newPasswordInput.sendKeys(newPass);
     this.newPasswordButton.click();
+    // result need some time to display
+    var changed = this.passwordChanged;
+    var error = this.passwordError;   
+    browser.wait(function () {
+      return changed.isDisplayed() || error.isDisplayed(); 
+    }, 8000, 'personal password change result not displayed');
   };
   
   module.exports = PersonalPage;

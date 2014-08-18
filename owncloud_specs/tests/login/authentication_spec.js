@@ -45,6 +45,17 @@ describe('Authentication', function() {
     expect(browser.getCurrentUrl()).not.toContain('index.php/apps/files/');
   });
   
+  it('should login admin user and close firstrunwizard', function() {  
+    // workaround: Test needed to close firstrunwizard
+    loginPage.login(params.login.user, params.login.password);
+    
+    var firstRunWizardPage = new FirstRunWizardPage(params.baseUrl);
+    firstRunWizardPage.waitForDisplay();
+    firstRunWizardPage.close();
+    
+    expect(browser.getCurrentUrl()).toContain('index.php/apps/files/');      
+  });
+
   it('should login with admin account', function() {    
     loginPage.login(params.login.user, params.login.password);
     browser.takeScreenshot().then(function (png) {
