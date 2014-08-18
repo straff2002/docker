@@ -12,6 +12,14 @@ describe('Authentication', function() {
     loginPage = new LoginPage(params.baseUrl);
     browser.manage().deleteAllCookies(); // logout the hard way
     loginPage.get();
+    
+    // Skip tests after first failed test
+    // if (this.results_.failedCount > 0) {
+    //   // Hack: Quit by filtering upcoming tests
+    //   this.env.specFilter = function(spec) {
+    //     return false;
+    //   };
+    // }
   });
 
   it('should show a logo', function() {
@@ -23,7 +31,7 @@ describe('Authentication', function() {
         new Screenshot(png, 'LoginPage.png');
     });
 
-    expect(loginPage.isLoginPage()).toEqual(true);
+    expect(loginPage.isLoginPage()).toBeTruthy();
   });
   
   it('should meet the locator dependencies', function() {
@@ -38,8 +46,7 @@ describe('Authentication', function() {
   });
   
   it('should login with admin account', function() {    
-    loginPage.fillUserCredentilas(params.login.user, params.login.password);
-    loginPage.loginButton.click();
+    loginPage.login(params.login.user, params.login.password);
     browser.takeScreenshot().then(function (png) {
         new Screenshot(png, 'LoginAsAdmin.png');
     });
@@ -55,17 +62,15 @@ describe('Authentication', function() {
   });
   
   it('should not login with wrong credentials', function() {    
-    loginPage.fillUserCredentilas('wrongName', 'wrongPass');
-    loginPage.loginButton.click();
+    loginPage.login('wrongName', 'wrongPass');
     browser.takeScreenshot().then(function (png) {
         new Screenshot(png, 'LoginWrong.png');
     });
     expect(browser.getCurrentUrl()).not.toContain('index.php/apps/files/');
   });
   
-  it('should be able to visit user management after admin login', function() {    
-    loginPage.fillUserCredentilas(params.login.user, params.login.password);
-    loginPage.loginButton.click();
+  it('should have rights to visit user management after admin login', function() {    
+    loginPage.login(params.login.user, params.login.password);
     userPage = new UserPage(params.baseUrl);
     userPage.get();
     expect(browser.getCurrentUrl()).toEqual(userPage.url);

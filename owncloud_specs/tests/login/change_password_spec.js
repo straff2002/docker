@@ -6,6 +6,8 @@ var FirstRunWizardPage = require('../pages/firstRunWizard.page.js');
 describe('Valid Usernames', function() {
   var params = browser.params;
   var loginPage;
+  var long_pass = 'newNEW123!"§$%&()=?öüß';
+  var special_pass = 'special%&@/1234!-+=';
   
   beforeEach(function() {
     isAngularSite(false);
@@ -29,7 +31,7 @@ describe('Valid Usernames', function() {
     loginPage.login('demo', 'password');
     var personalPage = new PersonalPage(params.baseUrl);
     var firstRunWizardPage = new FirstRunWizardPage(params.baseUrl);
-    firstRunWizardPage.waitForFirstRunWizard();
+    firstRunWizardPage.waitForDisplay();
     firstRunWizardPage.close();
     
     expect(browser.getCurrentUrl()).toContain('index.php/apps/files/');      
@@ -48,7 +50,7 @@ describe('Valid Usernames', function() {
     loginPage.login('demo', 'newpassword');
     var personalPage = new PersonalPage(params.baseUrl);
     personalPage.get();
-    personalPage.changePassword('newpassword', 'newNEW123!"§$%&()=?öüß');
+    personalPage.changePassword('newpassword', long_pass);
     browser.wait(function () {
         return personalPage.passwordChanged.isDisplayed();
       }, 3000);
@@ -57,7 +59,7 @@ describe('Valid Usernames', function() {
   });
   
   it('should login and not change password with wrong old password in personal settings', function() {    
-    loginPage.login('demo', 'newNEW123!"§$%&()=?öüß');
+    loginPage.login('demo', long_pass);
     var personalPage = new PersonalPage(params.baseUrl);
     personalPage.get();
     personalPage.changePassword('wrongpassword', 'newpassword');
@@ -67,22 +69,21 @@ describe('Valid Usernames', function() {
   
   // %, &, @ and /
   it('should change password including specialcharacters in personal settings', function() {    
-    loginPage.login('demo', 'newNEW123!"§$%&()=?öüß');
+    loginPage.login('demo', long_pass);
     var personalPage = new PersonalPage(params.baseUrl);
     personalPage.get();
-    personalPage.changePassword('newNEW123!"§$%&()=?öüß', 'special%&@/1234!-+=');
+    personalPage.changePassword(long_pass, special_pass);
     expect(personalPage.passwordChanged.isDisplayed()).toBeTruthy();
     expect(personalPage.passwordError.isDisplayed()).toBeFalsy();
   });
  
   it('should login with password including specialcharacters', function() {    
-    loginPage.login('demo', 'special%&@/1234!-+=');
+    loginPage.login('demo', special_pass);
     expect(browser.getCurrentUrl()).toContain('index.php/apps/files/');      
   });
   
   it('should login as admin and change password for test users ', function() {
-    loginPage.fillUserCredentilas(params.login.user, params.login.password);
-    loginPage.loginButton.click();
+    loginPage.login(params.login.user, params.login.password);
     userPage = new UserPage(params.baseUrl);
     userPage.get();
     element(by.css('#userlist tr[data-displayname="demo"] td.password')).click().then(function() {

@@ -1,7 +1,7 @@
 var LoginPage = require('../pages/login.page.js');
 var UserPage = require('../pages/user.page.js');
 
-describe('Valid Username Cases', function() {
+describe('Username Cases', function() {
   var params = browser.params;
   var loginPage;
   

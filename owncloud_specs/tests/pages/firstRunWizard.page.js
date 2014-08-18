@@ -5,7 +5,7 @@
     this.closeLink = element(by.id('cboxOverlay'));
   };
   
-  FirstRunWizardPage.prototype.waitForFirstRunWizard = function() {
+  FirstRunWizardPage.prototype.waitForDisplay = function() {
     browser.wait(function() {
       return by.id('closeWizard');
       // return by.id('firstrunwizard');
@@ -13,18 +13,22 @@
   };
   
   FirstRunWizardPage.prototype.isFirstRunWizardPage = function() {
-    this.waitForFirstRunWizard();
+    this.waitForDisplay();
     return !!this.firstRunWizardId;
   };
+  
+  FirstRunWizardPage.prototype.waitForClose = function() {
+    browser.wait(function () {
+      return element(by.id('cboxOverlay')).isDisplayed().then(function(displayed) {
+        return !displayed; // Do a little Promise/Boolean dance here, since wait will resolve promises.
+      });
+    }, 3000, 'firstrunwizard should dissappear');
+  }
   
   FirstRunWizardPage.prototype.close = function() {
     browser.executeScript('$("#closeWizard").click();');
     browser.executeScript('$("#cboxOverlay").click();');
-    browser.wait(function () {
-        return element(by.id('cboxOverlay')).isDisplayed().then(function(displayed) {
-          return !displayed; // Do a little Promise/Boolean dance here, since wait will resolve promises.
-        });
-      }, 3000, 'firstrunwizard should dissappear');
+    this.waitForClose();
   };
   
   module.exports = FirstRunWizardPage;

@@ -15,8 +15,7 @@ describe('New User', function() {
   });
   
   it('should login as admin and create a new user ', function() {
-    loginPage.fillUserCredentilas(params.login.user, params.login.password);
-    loginPage.loginButton.click();
+    loginPage.login(params.login.user, params.login.password);
     userPage = new UserPage(params.baseUrl);
     userPage.get();
     userPage.createNewUser('demo', 'demo');

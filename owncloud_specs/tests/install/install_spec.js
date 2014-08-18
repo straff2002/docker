@@ -28,7 +28,7 @@ describe('Installation', function() {
         display.log(text);
       });
     }
-    expect(installPage.warningField.isDisplayed()).toEqual(false);
+    expect(installPage.warningField.isDisplayed()).toBeFalsy();
   });
   
   it('should show more config after clicking the advanced config link ', function() {
