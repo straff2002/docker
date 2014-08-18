@@ -34,4 +34,3 @@ else
 fi
 
 /usr/bin/mysqld_safe
-
