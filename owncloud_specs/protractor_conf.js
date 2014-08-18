@@ -55,7 +55,8 @@ exports.config = {
   
   suites: {
     install: 'tests/install/**/*_spec.js',
-    login:  'tests/login/**/*_spec.js'
+    login:  'tests/login/**/*_spec.js',
+    txt: 'tests/txt/**/*_spec.js'
     // search: [
     //   'tests/search/**/*Spec.js',
     //   'tests/user_search/**/*Spec.js'
