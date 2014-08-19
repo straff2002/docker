@@ -10,7 +10,12 @@
 
     this.newButton = element(by.css('#new a'));
     this.newTextButton = element(by.css('li.icon-filetype-text.svg'));
-    this.newTextnameForm = element(by.css('li.icon-filetype-text form input')); 
+    this.newTextnameForm = element(by.css('li.icon-filetype-text form input'));
+
+
+    this.textArea = element(by.css('.ace_content'));
+    this.textLine = element(by.css('.ace_content .ace_line'));
+    this.saveButton = element(by.id('editor_save'));
   };
   
   FilesPage.prototype.get = function() { 
@@ -30,6 +35,10 @@
     this.get();
   };
 
+  FilesPage.prototype.moveMouseTo = function(elem) {
+    browser.actions().mouseMove($(elem)).perform();
+  };
+
   FilesPage.prototype.createNewTextFile = function(name) {
     this.newButton.click();
     this.newTextButton.click();
@@ -38,10 +47,37 @@
     this.get();
   };
 
-  FilesPage.prototype.deleteFile = function(file) {
+  FilesPage.prototype.renameFile = function(newName) {
+    this.moveMouseTo("tr[data-file='testText.txt']");
+    var renameId = by.css("tr[data-file='testText.txt'] a.action.action-rename");
+    element(renameId).click()
+    var renameForm = by.css("tr[data-file='testText.txt'] form input");
+    element(renameForm).sendKeys(newName);
+    element(renameForm).sendKeys(protractor.Key.ENTER);
+  };
 
-    browser.actions().mouseMove($("tr[data-file='testText.txt']")).perform();
-    var removeId = by.css("tr[data-file='testText.txt'] a.action.delete.delete-icon");
+  // FilesPage.prototype.editFile = function(file) {
+  //   var listElement = element(by.css("tr[data-file='testText.txt'] span.innernametext"));
+  //   listElement.click();
+  //   var textArea = this.textArea;
+  //   browser.pause();
+  //   browser.wait(function() {
+  //     return(textArea.isDisplayed());
+  //   }, 3000, 'load textEditPage');
+  // };
+
+  // FilesPage.prototype.writeInFile = function(text) {
+  //   // this.textArea.click();
+  //   this.textLine.sendKeys(text);
+  // };
+
+  // FilesPage.prototype.saveFile = function() {
+  //   this.saveButton.click();
+  // };
+
+  FilesPage.prototype.deleteFile = function(file) {
+    this.moveMouseTo("tr[data-file='newText.txt']");
+    var removeId = by.css("tr[data-file='newText.txt'] a.action.delete.delete-icon");
     element(removeId).click();
     this.get();
   };
