@@ -17,6 +17,9 @@ describe('Txt Files', function() {
   });
 
   it('delete a txt file', function() {
+    browser.wait(function() {
+      return(filesPage.listFiles());
+    });
     filesPage.deleteFile('testText.txt');
     expect(filesPage.listFiles()).not.toContain('testText.txt');
   });

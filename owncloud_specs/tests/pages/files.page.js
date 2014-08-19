@@ -34,20 +34,18 @@
     this.newButton.click();
     this.newTextButton.click();
     this.newTextnameForm.sendKeys(name);
-    this.newTextnameForm.sendKeys(protractor.Key.ENTER);
+    this.newTextnameForm.sendKeys(protractor.Key.ENTER);  
+    this.get();
   };
 
-  FilesPage.prototype.deleteFile = function(fileId) {
-    var removeId = by.css('td.filename .innernametext="fileId" a.action.delete.delete-icon');
-    var filter = browser.findElement(removeId);
-    var scrollIntoView = function () {
-      arguments[0].scrollIntoView();
-    }
-    browser.executeScript(scrollIntoView, filter).then(function () {
-      browser.actions().mouseMove(browser.findElement(removeId)).perform();
-      element(removeId).click();
-    });
+  FilesPage.prototype.deleteFile = function(file) {
+
+    browser.actions().mouseMove($("tr[data-file='testText.txt']")).perform();
+    var removeId = by.css("tr[data-file='testText.txt'] a.action.delete.delete-icon");
+    element(removeId).click();
+    this.get();
   };
+
 
   FilesPage.prototype.listFiles = function() {
     return element.all(this.fileListId).map(function(filename) {
