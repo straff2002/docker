@@ -1,12 +1,14 @@
 #!/bin/sh
 
-SERVER="/Users/felix/Sites/ownCloud/deployment/systems/test-community-7.0.1"
-URL="http://127.0.0.1/ownClouds/test-community-7.0.1/"
+BASE_PATH=$(dirname $0)
+cd $BASE_PATH
 
-TESTS=$(dirname $0)
-cd $TESTS
-TESTS=$PWD
+TESTS=$PWD/tests
+DOCKER=$PWD/images
+SERVER=$PWD/www
+URL="http://127.0.0.1/octest/test-community-7.0.1/"
 
+OC_TEST_INSTANCE="test"
 
 rm -rf $SERVER; ocsetup test -c
 
