@@ -20,7 +20,7 @@ describe('New User', function() {
     userPage.get();
     userPage.createNewUser('demo', 'demo');
     userPage.get();
-    expect(userPage.listUser()).toEqual([ 'admin', 'demo' ]);
+    expect(userPage.listUser()).toContain('demo');
   });
   
   it('should login with a new user and show firstRunWizard', function() {    
@@ -41,7 +41,7 @@ describe('New User', function() {
     userPage.get();
     userPage.deleteUser('demo');
     userPage.get();
-    expect(userPage.listUser()).toEqual([ 'admin' ]);
+    expect(userPage.listUser()).not.toContain('demo');
   });
   
 });

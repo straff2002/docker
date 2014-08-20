@@ -20,8 +20,11 @@ describe('Username Cases', function() {
     userPage.createNewUser('demo1', 'demo');
     userPage.createNewUser('Demo2', 'demo');
     userPage.createNewUser('DEMO3', 'demo');
+    
     userPage.get();
-    expect(userPage.listUser()).toEqual([ 'admin', 'demo1', 'Demo2', 'DEMO3' ]);
+    expect(userPage.listUser()).toContain('demo1');
+    expect(userPage.listUser()).toContain('Demo2');
+    expect(userPage.listUser()).toContain('DEMO3' );
   });
   
   it('should login lowercase username with test user in lowercase', function() {    
@@ -77,7 +80,9 @@ describe('Username Cases', function() {
     userPage.deleteUser('Demo2');
     userPage.deleteUser('DEMO3');
     userPage.get();
-    expect(userPage.listUser()).toEqual([ 'admin' ]);
+    expect(userPage.listUser()).not.toContain('demo1');
+    expect(userPage.listUser()).not.toContain('Demo2');
+    expect(userPage.listUser()).not.toContain('DEMO3' );
   });
   
 });
