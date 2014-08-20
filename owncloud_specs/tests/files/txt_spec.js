@@ -14,14 +14,15 @@ describe('Txt Files', function() {
 // ================== CREATE FILE ===================================== //
 
   it('should create a new txt file', function() {
-    filesPage.createNewFile('text', 'testText');
+    filesPage.createNewTxtFile('testText');
+    filesPage.get(); // reload to get filesPage.listFiles() ready
     expect(filesPage.listFiles()).toContain('testText');
   });
 
 // ================== ALREADY EXISTING NAME =========================== //
 
   it('should not create new file if filename already exists', function() {
-    filesPage.fillNewForm('text', 'testText');
+    filesPage.createNewTxtFile('testText');
     var warning = by.css('.tipsy-inner');
     expect(element(warning).isDisplayed()).toBeTruthy();
   });
@@ -29,7 +30,7 @@ describe('Txt Files', function() {
 // ================== RENAME FILE ===================================== //
 
   it('should rename a txt file', function() {
-    filesPage.renameFile('newText');
+    filesPage.renameFile('testText.txt' ,'newText');
     browser.wait(function() {
       return(filesPage.listFiles());
     }, 3000);
@@ -42,17 +43,14 @@ describe('Txt Files', function() {
     browser.wait(function() {
       return(filesPage.listFiles());
     }, 3000);
-    filesPage.deleteFile(
-      "tr[data-file='newText.txt']",
-      "tr[data-file='newText.txt'] a.action.delete.delete-icon"
-    );
+    filesPage.deleteFile('newText.txt');
     // Throwing error cause it is looking for index:5 but list has just 5 elements
     // .then(function() {
     //   expect(filesPage.listFiles()).not.toContain('newText.txt');
     // });
 
     filesPage.get(); // reload to get filesPage.listFiles() ready
-    expect(filesPage.listFiles()).not.toContain('newText.txt');
+    expect(filesPage.listFiles()).not.toContain('newText');
   });
 
   // it('should edit and save a txt file', function() {

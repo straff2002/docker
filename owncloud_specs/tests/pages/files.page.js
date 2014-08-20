@@ -19,7 +19,9 @@
     this.textLine = element(by.css('.ace_content .ace_line'));
     this.saveButton = element(by.id('editor_save'));
   };
-  
+
+//================ SHARED ===============================================//
+ 
   FilesPage.prototype.get = function() { 
     browser.get(this.url);
     var button = this.newButton;
@@ -41,45 +43,45 @@
     browser.actions().mouseMove($(elem)).perform();
   };
 
-  FilesPage.prototype.fillNewForm = function(type, name) {
-    this.newButton.click();
-    switch(type) {
-      case 'text':
-        this.newTextButton.click();
-        this.newTextnameForm.sendKeys(name); 
-        this.newTextnameForm.sendKeys(protractor.Key.ENTER);  
-        break;
-      case 'folder':
-        this.newFolderButton.click();
-        this.newFoldernameForm.sendKeys(name); 
-        this.newFoldernameForm.sendKeys(protractor.Key.ENTER);  
-        break;
-      default:
-        console.log('wrong type');
-    };
-  }
-
-  FilesPage.prototype.createNewFile = function(type, name) {
-    this.fillNewForm(type, name);
-    this.get();
+  FilesPage.prototype.listFiles = function() {
+    return element.all(this.fileListId).map(function(filename) {
+      return filename.getText();
+    });
   };
 
-  FilesPage.prototype.renameFile = function(newName) {
-    this.moveMouseTo("tr[data-file='testText.txt']");
-    var renameId = by.css("tr[data-file='testText.txt'] a.action.action-rename");
+//================ SHARED ACTIONS ========================================//
+
+  FilesPage.prototype.renameFile = function(name, newName) {
+    this.moveMouseTo("tr[data-file='"+name+"']");
+    var renameId = by.css("tr[data-file='"+name+"'] a.action.action-rename");
     element(renameId).click();
-    var renameForm = by.css("tr[data-file='testText.txt'] form input");
+    var renameForm = by.css("tr[data-file='"+name+"'] form input");
     element(renameForm).sendKeys(newName);
     element(renameForm).sendKeys(protractor.Key.ENTER);
   };
 
-  FilesPage.prototype.renameFolder = function(newName) {
-    this.moveMouseTo("tr[data-file='testFolder']");
-    var renameId = by.css("tr[data-file='testFolder'] a.action.action-rename");
-    element(renameId).click();
-    var renameForm = by.css("tr[data-file='testFolder'] form input");
-    element(renameForm).sendKeys(newName);
-    element(renameForm).sendKeys(protractor.Key.ENTER);
+  FilesPage.prototype.deleteFile = function(name) {
+    this.moveMouseTo("tr[data-file='"+name+"']");
+    var removeId = by.css("tr[data-file='"+name+"'] a.action.delete.delete-icon");
+    return element(removeId).click();
+  };
+
+//================ TXT FILES ============================================//
+
+  FilesPage.prototype.createNewTxtFile = function(name) {
+    this.newButton.click()
+    this.newTextButton.click();
+    this.newTextnameForm.sendKeys(name); 
+    this.newTextnameForm.sendKeys(protractor.Key.ENTER);  
+  };
+
+//================ FOLDERS ==============================================//
+
+  FilesPage.prototype.createNewFolder = function(name) {
+    this.newButton.click()
+    this.newFolderButton.click();
+    this.newFoldernameForm.sendKeys(name); 
+    this.newFoldernameForm.sendKeys(protractor.Key.ENTER);  
   };
 
   // FilesPage.prototype.editFile = function(file) {
@@ -101,18 +103,6 @@
   //   this.saveButton.click();
   // };
 
-  FilesPage.prototype.deleteFile = function(elem1, elem2) {
-    this.moveMouseTo(elem1);
-    var removeId = by.css(elem2);
-    return element(removeId).click();
-  };
-
-
-  FilesPage.prototype.listFiles = function() {
-    return element.all(this.fileListId).map(function(filename) {
-      return filename.getText();
-    });
-  };
 
   module.exports = FilesPage;
 })();

@@ -14,14 +14,23 @@ describe('Folders', function() {
   // ================== CREATE FOLDER ===================================== //
 
   it('should create a new folder', function() {
-    filesPage.createNewFile('folder', 'testFolder');
+    filesPage.createNewFolder('testFolder');
+    filesPage.get(); // reload to get filesPage.listFiles() ready
     expect(filesPage.listFiles()).toContain('testFolder');
+  });
+
+// ================== ALREADY EXISTING FOLDER =========================== //
+
+  it('should not create new folder if foldername already exists', function() {
+    filesPage.createNewFolder('testFolder');
+    var warning = by.css('.tipsy-inner');
+    expect(element(warning).isDisplayed()).toBeTruthy();
   });
 
   // ================== RENAME FOLDER ===================================== //
 
   it('should rename a folder', function() {
-    filesPage.renameFolder('newFolder');
+    filesPage.renameFile('testFolder', 'newFolder');
     browser.wait(function() {
       return(filesPage.listFiles());
     }, 3000);
@@ -34,10 +43,7 @@ describe('Folders', function() {
     browser.wait(function() {
       return(filesPage.listFiles());
     }, 3000);
-    filesPage.deleteFile(
-      "tr[data-file='newFolder']",
-      "tr[data-file='newFolder'] a.action.delete.delete-icon"
-    );
+    filesPage.deleteFile('newFolder');
     filesPage.get(); // reload to get filesPage.listFiles() ready
     expect(filesPage.listFiles()).not.toContain('newFolder');
   });
