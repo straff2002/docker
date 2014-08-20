@@ -1,3 +1,4 @@
+#!/bin/sh
 
 SERVER="/Users/felix/Sites/ownCloud/deployment/systems/test-community-7.0.1"
 URL="http://127.0.0.1/ownClouds/test-community-7.0.1/"
@@ -17,3 +18,4 @@ php occ app:disable firstrunwizard
 
 cd $TESTS
 protractor $TESTS/protractor_conf.js --params.baseUrl=$URL --suite login
+
