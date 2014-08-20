@@ -9,8 +9,11 @@ then
 fi
 
 NAME=$1 
-INSTALL_PATH="$PWD/systems"
-SOURCE_PATH="$PWD/sources"
+BASE_PATH=$(dirname $0)
+cd $BASE_PATH
+
+INSTALL_PATH="$PWD/www"
+SOURCE_PATH="$PWD/source-cache"
 
 # default is community edition  
 EDITION="community"
