@@ -42,10 +42,6 @@ describe('Change Password  - Valid Usernames', function() {
     personalPage.get();
     personalPage.changePassword('password', 'newpassword')
 
-    personalPage.passwordChanged.isDisplayed().then(function(displayed) {
-      console.log(displayed);
-    });
-    
     expect(personalPage.passwordChanged.isDisplayed()).toBeTruthy();
     expect(personalPage.passwordError.isDisplayed()).toBeFalsy();
   });

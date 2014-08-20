@@ -38,6 +38,7 @@
     this.oldPasswordInput.sendKeys(oldPass);
     this.newPasswordInput.sendKeys(newPass);
     this.newPasswordButton.click();
+
     // result need some time to display
     var changed = this.passwordChanged;
     var error = this.passwordError;   

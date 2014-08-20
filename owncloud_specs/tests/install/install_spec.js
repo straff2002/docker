@@ -1,5 +1,4 @@
 var InstallPage = require('../pages/install.page.js');
-var FirstRunWizardPage = require('../pages/firstRunWizard.page.js');
 var Screenshot = require('../helper/screenshot.js');
 
 describe('Installation', function() {
@@ -46,20 +45,16 @@ describe('Installation', function() {
     });
   });
   
-  it('should install as admin with sqlite and show firstRunWizard', function() {
+  it('should install as admin with sqlite', function() {
     installPage.fillAdminAccount(params.login.user, params.login.password);
     
     browser.takeScreenshot().then(function (png) {
       new Screenshot(png, 'Credentials.png');
     });
     
-    installPage.installButton.click();
-    var firstRunWizardPage = new FirstRunWizardPage(params.baseUrl);
-    expect(firstRunWizardPage.isFirstRunWizardPage()).toBeTruthy();      
-    expect(firstRunWizardPage.firstRunWizard.isDisplayed()).toBeTruthy();      
-    browser.takeScreenshot().then(function (png) {
-      new Screenshot(png, 'FirstRunWizard.png');
-    }); 
+    installPage.installButton.click().then(function() {
+      expect(browser.getCurrentUrl()).toContain('index.php/apps/files/');
+    });
   });
   
 });

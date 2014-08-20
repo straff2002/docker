@@ -1,2 +1,0 @@
-docker build -t owncloud-mysql ./mysql
-docker build -t owncloud .
