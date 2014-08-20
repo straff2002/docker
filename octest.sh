@@ -5,12 +5,21 @@ cd $BASE_PATH
 
 TESTS=$PWD/tests
 DOCKER=$PWD/images
-SERVER=$PWD/www
-URL="http://127.0.0.1/octest/test-community-7.0.1/"
+WWW=$PWD/www
 
-OC_TEST_INSTANCE="test"
+OC_TEST_INSTANCE_NAME="test"
+OC_TEST_INSTANCE_EDITION="community"
+OC_TEST_INSTANCE_VERSION="7.0.1"
+OC_TEST_INSTANCE="$OC_TEST_INSTANCE_NAME-$OC_TEST_INSTANCE_EDITION-$OC_TEST_INSTANCE_VERSION"
 
-rm -rf $SERVER; ocsetup test -c
+URL="http://127.0.0.1/octest/${OC_TEST_INSTANCE}/"
+SERVER=$WWW/$OC_TEST_INSTANCE
+
+echo $OC_TEST_INSTANCE
+echo $URL
+echo $SERVER
+
+rm -rf $SERVER; ./ocsetup.sh test -c
 
 cd $TESTS
 protractor $TESTS/protractor_conf.js --params.baseUrl=$URL --suite install
