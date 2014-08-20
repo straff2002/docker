@@ -10,11 +10,6 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN /etc/my_init.d/00_regen_ssh_host_keys.sh
 
-# RUN mkdir /var/www/owncloud
-# ADD ocsetup.sh /var/www/owncloud/ocsetup.sh
-# RUN chmod +x /var/www/owncloud/ocsetup.sh 
-# RUN /var/www/owncloud/ocsetup.sh test
-
 RUN curl https://download.owncloud.org/community/owncloud-7.0.1.tar.bz2 | tar jx -C /var/www/
 RUN chown -R www-data:www-data /var/www/owncloud
 
