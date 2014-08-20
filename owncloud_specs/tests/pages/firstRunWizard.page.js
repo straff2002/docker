@@ -7,6 +7,7 @@
   
   FirstRunWizardPage.prototype.waitForDisplay = function() {
     browser.wait(function() {
+      console.log(by.id('closeWizard'));
       return by.id('closeWizard');
       // return by.id('firstrunwizard');
     }, 8000);
