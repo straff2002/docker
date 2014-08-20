@@ -6,6 +6,11 @@
     this.path = 'index.php/apps/files';
     this.url = baseUrl + this.path;
 
+    var url = this.url
+    this.folderUrl = function(folder) {
+      return url+'/?dir=%2F'+folder
+    }
+
     this.fileListId = by.css('td.filename .innernametext');
 
     this.newButton = element(by.css('#new a'));
@@ -14,10 +19,13 @@
     this.newTextnameForm = element(by.css('li.icon-filetype-text form input'));
     this.newFoldernameForm = element(by.css('li.icon-filetype-folder form input'));
 
+    this.alertWarning = element(by.css('.tipsy-inner'));
 
-    this.textArea = element(by.css('.ace_content'));
-    this.textLine = element(by.css('.ace_content .ace_line'));
-    this.saveButton = element(by.id('editor_save'));
+    this.emptyContent = element(by.id('emptycontent'));
+
+    // this.textArea = element(by.css('.ace_content'));
+    // this.textLine = element(by.css('.ace_content .ace_line'));
+    // this.saveButton = element(by.id('editor_save'));
   };
 
 //================ SHARED ===============================================//
@@ -29,6 +37,11 @@
       return button.isDisplayed();
     }, 5000, 'load files content');
   };
+
+  FilesPage.prototype.getFolder = function(folder) {
+    folderUrl = this.folderUrl(folder);
+    browser.get(folderUrl);
+  }
 
   FilesPage.prototype.getAsUser = function(name, pass) { 
     var loginPage;
@@ -51,14 +64,37 @@
 
 //================ SHARED ACTIONS ========================================//
 
-  FilesPage.prototype.renameFile = function(name, newName) {
+  FilesPage.prototype.openRenameForm = function(name) {
     this.moveMouseTo("tr[data-file='"+name+"']");
     var renameId = by.css("tr[data-file='"+name+"'] a.action.action-rename");
     element(renameId).click();
+  };
+
+  FilesPage.prototype.renameFile = function(name, newName) {
+    this.openRenameForm(name);
     var renameForm = by.css("tr[data-file='"+name+"'] form input");
     element(renameForm).sendKeys(newName);
     element(renameForm).sendKeys(protractor.Key.ENTER);
   };
+
+  FilesPage.prototype.emptyRenameFile = function(name) {
+    this.openRenameForm(name);
+    var renameForm = by.css("tr[data-file='"+name+"'] form input");
+    for(var i=0; i<5; i++) {
+      element(renameForm).sendKeys(protractor.Key.DELETE)
+    };
+    element(renameForm).sendKeys(protractor.Key.ENTER);
+  };
+
+  FilesPage.prototype.takeOffSubfix = function(name, newName) {
+    this.openRenameForm(name);
+    var renameForm = by.css("tr[data-file='"+name+"'] form input");
+    element(renameForm).sendKeys(newName);
+    for(var i=0; i<5; i++) {
+      element(renameForm).sendKeys(protractor.Key.DELETE)
+    };
+    element(renameForm).sendKeys(protractor.Key.ENTER);
+  }
 
   FilesPage.prototype.deleteFile = function(name) {
     this.moveMouseTo("tr[data-file='"+name+"']");
@@ -83,6 +119,19 @@
     this.newFoldernameForm.sendKeys(name); 
     this.newFoldernameForm.sendKeys(protractor.Key.ENTER);  
   };
+
+  
+  FilesPage.prototype.goInToFolder = function(name) {
+    this.moveMouseTo("tr[data-file='"+name+"']");
+    var folder = element(by.css("tr[data-file='"+name+"'] span.innernametext"));
+    folder.click();
+    var button = this.newButton;
+    browser.wait(function() {
+      return button.isDisplayed();
+    }, 5000, 'load files content');
+  }
+
+//================ NOT WORKING STUFF ====================================//
 
   // FilesPage.prototype.editFile = function(file) {
   //   var listElement = element(by.css("tr[data-file='testText.txt'] span.innernametext"));
