@@ -1,0 +1,5 @@
+docker stop oc
+docker stop oc-mysql
+
+docker rm oc
+docker rm oc-mysql
