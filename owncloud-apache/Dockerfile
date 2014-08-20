@@ -5,7 +5,7 @@ ENV HOME /root
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get -y update
-RUN apt-get -y install apache2 mysql-client libapache2-mod-php5 php5-gd php5-json php5-mysql php5-sqlite php5-curl php5-intl php5-mcrypt php5-imagick bzip2 wget
+RUN apt-get -y install apache2 mysql-server mysql-client libapache2-mod-php5 php5-gd php5-json php5-mysql php5-sqlite php5-curl php5-intl php5-mcrypt php5-imagick bzip2 wget
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN /etc/my_init.d/00_regen_ssh_host_keys.sh

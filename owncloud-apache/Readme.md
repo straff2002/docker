@@ -13,6 +13,6 @@ Run
 
 ```
 docker run -dv <host-path>:/data-vol --name data-vol data-vol 
-
-docker run -dp 80:80 --volumes-from data-vol oc-baseimg
+docker run -d -e MYSQL_PASS="rootpass" --name="db-mysql" db-mysql
+docker run -dp 80:80 --link=db-mysql:db --volumes-from data-vol oc-baseimg
 ```
