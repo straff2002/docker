@@ -27,55 +27,15 @@ describe('Folders', function() {
     expect(filesPage.alertWarning.isDisplayed()).toBeTruthy();
   });
 
-  // ================== RENAME FOLDER ===================================== //
-
-  it('should rename a folder', function() {
-    filesPage.renameFile('testFolder', 'newFolder');
-    browser.wait(function() {
-      return(filesPage.listFiles());
-    }, 3000);
-    expect(filesPage.listFiles()).toContain('newFolder');
-  });
-
-  it('should show alert message if name already in use', function() {
-    filesPage.createNewFolder('testFolder');
-    filesPage.get(); // reload to get filesPage.listFiles() ready
-    filesPage.renameFile('testFolder', 'newFolder');
-    browser.wait(function() {
-      return(filesPage.listFiles());
-    }, 3000);
-    expect(filesPage.alertWarning.isDisplayed()).toBeTruthy();
-  });
-
-  it('should rename a file using special characters', function() {
-    filesPage.createNewFolder('secondFolder');
-    filesPage.get();
-    filesPage.renameFile('secondFolder', 'sP€c!@L B-)');
-    browser.wait(function() {
-      return(filesPage.listFiles());
-    }, 3000);
-    expect(filesPage.listFiles()).toContain('sP€c!@L B-)');
-  });
-
-  it('should show alert message if newName is empty', function() {
-    filesPage.emptyRenameFile('newFolder');
-    browser.wait(function() {
-      return(filesPage.listFiles());
-    }, 3000);
-    expect(filesPage.alertWarning.isDisplayed()).toBeTruthy();
-  });
-
   // ================== DELETE FOLDER ===================================== //
 
   it('should delete a folder', function() {
     browser.wait(function() {
       return(filesPage.listFiles());
     }, 3000);
-    filesPage.deleteFile('newFolder');
     filesPage.deleteFile('testFolder');
-    filesPage.deleteFile('sP€c!@L B-)');
     filesPage.get(); // reload to get filesPage.listFiles() ready
-    expect(filesPage.listFiles()).not.toContain('newFolder', 'sP€c!@L B-)');
+    expect(filesPage.listFiles()).not.toContain('testFolder');
   });
 
   // ================== SUB FOLDER ======================================== //
@@ -90,6 +50,15 @@ describe('Folders', function() {
     filesPage.createNewFolder('SubFolder2');
     expect(filesPage.listFiles()).toContain('SubFolder', 'SubFolder2');
   });  
+
+  it('should rename a subfolder', function() {
+    filesPage.goInToFolder('hasSubFolder');
+    filesPage.renameFile('SubFolder2', 'NewSubFolder');
+    browser.wait(function() {
+      return(filesPage.listFiles());
+    }, 3000);
+    expect(filesPage.listFiles()).toContain('NewSubFolder');
+  });
 
   it('should delete a subfolder', function() {
     filesPage.goInToFolder('hasSubFolder');
