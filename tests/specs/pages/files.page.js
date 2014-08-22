@@ -12,7 +12,12 @@
     }
 
     this.fileListId = by.css('td.filename .innernametext');
+    this.selectedFileListId = by.css('tr.searchresult td.filename .innernametext');
 
+    // filelist
+    this.firstListElem = element(by.css('#fileList tr:first-child'));
+
+    // new Button and sublist
     this.newButton = element(by.css('#new a'));
     this.newTextButton = element(by.css('li.icon-filetype-text.svg'));
     this.newFolderButton = element(by.css('li.icon-filetype-folder.svg'));
@@ -21,8 +26,17 @@
 
     this.alertWarning = element(by.css('.tipsy-inner'));
 
-    this.emptyContent = element(by.id('emptycontent'));
+    this.trashbinButton = element(by.css('#app-navigation li.nav-trashbin a'));
 
+    // sort arrows
+    this.nameSortArrow = element(by.css('a.name.sort'));
+    this.sizeSortArrow = element(by.css('a.size.sort'));
+    this.modifiedSortArrow = element(by.id('modified'));
+
+    this.searchInput = element(by.id('searchbox'));
+
+    this.shareWithForm = element(by.id('shareWith'));
+    this.sharedWithDropdwon = element(by.id('ui-id-1'));
     // this.textArea = element(by.css('.ace_content'));
     // this.textLine = element(by.css('.ace_content .ace_line'));
     // this.saveButton = element(by.id('editor_save'));
@@ -41,6 +55,10 @@
   FilesPage.prototype.getFolder = function(folder) {
     folderUrl = this.folderUrl(folder);
     browser.get(folderUrl);
+    var button = this.newButton;
+    browser.wait(function() {
+      return button.isDisplayed();
+    }, 5000, 'load files content');
   }
 
   FilesPage.prototype.getAsUser = function(name, pass) { 
@@ -61,8 +79,17 @@
       return filename.getText();
     });
   };
+  FilesPage.prototype.listSelctedFiles = function() {
+    return element.all(this.selectedFileListId).map(function(filename) {
+      return filename.getText();
+    });
+  };
 
 //================ SHARED ACTIONS ========================================//
+
+  FilesPage.prototype.setCurrentListElem = function(name) {
+    this.setCurrentListElem = element(by.css("tr[data-file='"+name+"']"));
+  }
 
   FilesPage.prototype.openRenameForm = function(name) {
     this.moveMouseTo("tr[data-file='"+name+"']");
@@ -91,7 +118,7 @@
     var renameForm = by.css("tr[data-file='"+name+"'] form input");
     element(renameForm).sendKeys(newName);
     for(var i=0; i<5; i++) {
-      element(renameForm).sendKeys(protractor.Key.DELETE)
+      element(renameForm).sendKeys(protractor.Key.DELETE);
     };
     element(renameForm).sendKeys(protractor.Key.ENTER);
   }
@@ -100,6 +127,30 @@
     this.moveMouseTo("tr[data-file='"+name+"']");
     var removeId = by.css("tr[data-file='"+name+"'] a.action.delete.delete-icon");
     return element(removeId).click();
+  };
+
+  FilesPage.prototype.openShareForm = function(name) {
+    this.moveMouseTo("tr[data-file='"+name+"']");
+    var shareId = by.css("tr[data-file='"+name+"'] a.action.action-share");
+    return element(shareId).click();
+  };
+
+  // FilesPage.prototype.showFileVersions = function(name) {
+  //   this.moveMouseTo("tr[data-file='"+name+"']");
+  //   var versionId = by.css("tr[data-file='"+name+"'] a.action.action-versions");
+  //   return element(versionId).click();
+  // };
+
+  // FilesPage.prototype.downloadFile = function(name) {
+  //   this.moveMouseTo("tr[data-file='"+name+"']");
+  //   var downloadId = by.css("tr[data-file='"+name+"'] a.action.action-download");
+  //   return element(downloadId).click();
+  // };
+
+  FilesPage.prototype.restoreFile = function(id) {
+    this.moveMouseTo("#fileList tr[data-id='"+id+"']");
+    var restoreId = (by.css("#fileList tr[data-id='"+id+"'] a.action.action-restore"));
+    return element(restoreId).click(0);
   };
 
 //================ TXT FILES ============================================//
@@ -120,7 +171,6 @@
     this.newFoldernameForm.sendKeys(protractor.Key.ENTER);  
   };
 
-  
   FilesPage.prototype.goInToFolder = function(name) {
     this.moveMouseTo("tr[data-file='"+name+"']");
     var folder = element(by.css("tr[data-file='"+name+"'] span.innernametext"));
@@ -129,7 +179,12 @@
     browser.wait(function() {
       return button.isDisplayed();
     }, 5000, 'load files content');
-  }
+  };
+
+  FilesPage.prototype.createSubFolder = function(folderName, subFolderName) {
+    this.goInToFolder(folderName);
+    this.createNewFolder(subFolderName);
+  };
 
 //================ NOT WORKING STUFF ====================================//
 

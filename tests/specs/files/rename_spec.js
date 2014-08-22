@@ -1,8 +1,7 @@
 var LoginPage = require('../pages/login.page.js');
 var FilesPage = require('../pages/files.page.js');
-var Screenshot = require('../helper/screenshot.js');
 
-describe('Txt Files', function() {
+describe('Rename', function() {
   var params = browser.params;
   var filesPage;
   
@@ -12,24 +11,67 @@ describe('Txt Files', function() {
     filesPage.getAsUser(params.login.user, params.login.password);
   });
 
-// ================== CREATE FILE ===================================== //
+  // ================== RENAME FOLDER ===================================== //
 
-  it('should create a new txt file', function() {
-    filesPage.createNewTxtFile('testText');
+  it('should rename a folder', function() {
+    filesPage.createNewFolder('testFolder');
     filesPage.get(); // reload to get filesPage.listFiles() ready
-    expect(filesPage.listFiles()).toContain('testText');
+    filesPage.renameFile('testFolder', 'newFolder');
+    browser.wait(function() {
+      return(filesPage.listFiles());
+    }, 3000);
+    expect(filesPage.listFiles()).toContain('newFolder');
   });
 
-// ================== ALREADY EXISTING NAME =========================== //
-
-  it('should not create new file if filename already exists', function() {
-    filesPage.createNewTxtFile('testText');
+  it('should show alert message if foldername already in use', function() {
+    filesPage.createNewFolder('testFolder');
+    filesPage.get(); // reload to get filesPage.listFiles() ready
+    filesPage.renameFile('testFolder', 'newFolder');
+    browser.wait(function() {
+      return(filesPage.listFiles());
+    }, 3000);
     expect(filesPage.alertWarning.isDisplayed()).toBeTruthy();
   });
 
-// ================== RENAME FILES ==================================== //
+  it('should show alert message if using forbidden characters', function() {
+    filesPage.renameFile('testFolder', 'new:Folder');
+    browser.wait(function() {
+      return(filesPage.listFiles());
+    }, 3000);
+    expect(filesPage.alertWarning.isDisplayed()).toBeTruthy();
+  });
+
+  it('should rename a file using special characters', function() {
+    filesPage.renameFile('testFolder', 'sP€c!@L B-)');
+    browser.wait(function() {
+      return(filesPage.listFiles());
+    }, 3000);
+    expect(filesPage.listFiles()).toContain('sP€c!@L B-)');
+  });
+
+  it('should show alert message if newName is empty', function() {
+    filesPage.emptyRenameFile('newFolder');
+    browser.wait(function() {
+      return(filesPage.listFiles());
+    }, 3000);
+    expect(filesPage.alertWarning.isDisplayed()).toBeTruthy();
+  });
+
+  it('should delete a folder', function() {
+    browser.wait(function() {
+      return(filesPage.listFiles());
+    }, 3000);
+    filesPage.deleteFile('newFolder');
+    filesPage.deleteFile('sP€c!@L B-)');
+    filesPage.get(); // reload to get filesPage.listFiles() ready
+    expect(filesPage.listFiles()).not.toContain('newFolder', 'sP€c!@L B-)');
+  });
+
+  // ================== RENAME FILES ==================================== //
 
   it('should rename a txt file', function() {
+    filesPage.createNewTxtFile('testText');
+    filesPage.get(); // reload to get filesPage.listFiles() ready
     filesPage.renameFile('testText.txt', 'newText');
     browser.wait(function() {
       return(filesPage.listFiles());
@@ -37,7 +79,7 @@ describe('Txt Files', function() {
     expect(filesPage.listFiles()).toContain('newText');
   });
 
-  it('should show alert message if name is already in use', function() {
+  it('should show alert message if filename is already in use', function() {
     filesPage.createNewTxtFile('testText');
     filesPage.get(); // reload to get filesPage.listFiles() ready
     filesPage.renameFile('testText.txt', 'newText');
@@ -88,30 +130,13 @@ describe('Txt Files', function() {
     expect(filesPage.listFiles()).toContain('Without Subfix');
   });
 
-// ================== DELETE FILE ===================================== //
-
   it('should delete a txt file', function() {
     browser.wait(function() {
       return(filesPage.listFiles());
     }, 3000);
-    filesPage.deleteFile('newText.txt');
-    filesPage.deleteFile('sP€c!@L B-).txt');
     filesPage.deleteFile('Without Subfix');
-    // Throwing error cause it is looking for index:5 but list has just 5 elements
-    // .then(function() {
-    //   expect(filesPage.listFiles()).not.toContain('newText.txt');
-    // });
-
     filesPage.get(); // reload to get filesPage.listFiles() ready
     expect(filesPage.listFiles()).not.toContain('sP€c!@L B-)', 'newText', 'Without Subfix')
   });
 
-  // it('should edit and save a txt file', function() {
-  //   filesPage.editFile('testText.txt');
-  //   filesPage.writeInFile('This is a test Text to test if one can edit and save a .txt file.');
-  //   filesPage.saveFile();
-  //   filesPage.get();
-  //   filesPage.editFile('testText.txt');
-  //   expect(filesPage.textArea.isDisplayed()).toBeTruthy();
-  // });
 });
