@@ -7,6 +7,10 @@
     this.newUserNameInput = element(by.id('newusername'));
     this.newUserPasswordInput = element(by.id('newuserpassword'));
     this.createNewUserButton = element(by.css('#newuser input[type="submit"]')); 
+
+    this.newGroupButton = element(by.css('#newgroup-init a'));
+    this.newGroupNameInput = element(by.css('#newgroup-form input#newgroupname'));
+
   };
 
   UserPage.prototype.get = function() {
@@ -50,6 +54,18 @@
       element(removeId).click();
     });
   };
+
+  UserPage.prototype.setCurrentListElem = function(name) {
+    return element(by.css("tr[data-uid='" + name + "']"));
+  }
+
+  UserPage.prototype.renameDisplayName = function(name, newName) {
+    var renameDisplayNameButton = element(by.css("tr[data-uid='" + name + "'] td.displayName"));
+    renameDisplayNameButton.click();
+    var renameDisplayNameForm = element(by.css("tr[data-uid='" + name + "'] td.displayName input"));
+    renameDisplayNameForm.sendKeys(newName);
+    renameDisplayNameForm.sendKeys(protractor.Key.ENTER);
+  };
   
   UserPage.prototype.listUser = function() {
     this.ensureUserPage();
@@ -58,5 +74,26 @@
     });
   };
   
+  UserPage.prototype.createNewGroup = function(name) {
+    this.newGroupButton.click();
+    var newGroupNameInput = this.newGroupNameInput;
+    browser.wait(function() {
+      return newGroupNameInput.isDisplayed();
+    }, 3000);
+    this.newGroupNameInput.sendKeys(name);
+    this.newGroupNameInput.sendKeys(protractor.Key.ENTER);
+  };
+
+  UserPage.prototype.setUserGroup = function(userName, groupName) {
+    var renameDisplayNameButton = element(by.css("tr[data-uid='" + userName + "'] td.groups .multiselect.button"));
+    renameDisplayNameButton.click();
+    var dropdown = element(by.css("tr[data-uid='" + userName + "'] ul.multiselectoptions.down"));
+    browser.wait(function() {
+      return dropdown.isDisplayed();
+    }, 3000);
+    var checkbox = element(by.css("input[type='checkbox']"));
+    checkbox.click();
+  };
+
   module.exports = UserPage;
 })();

@@ -8,7 +8,7 @@
 
     var url = this.url
     this.folderUrl = function(folder) {
-      return url+'/?dir=%2F'+folder
+      return url + '/?dir=%2F' + folder
     }
 
     this.fileListId = by.css('td.filename .innernametext');
@@ -36,7 +36,7 @@
     this.searchInput = element(by.id('searchbox'));
 
     this.shareWithForm = element(by.id('shareWith'));
-    this.sharedWithDropdwon = element(by.id('ui-id-1'));
+    this.sharedWithDropdown = element(by.id('ui-id-1'));
     // this.textArea = element(by.css('.ace_content'));
     // this.textLine = element(by.css('.ace_content .ace_line'));
     // this.saveButton = element(by.id('editor_save'));
@@ -88,12 +88,12 @@
 //================ SHARED ACTIONS ========================================//
 
   FilesPage.prototype.setCurrentListElem = function(name) {
-    this.setCurrentListElem = element(by.css("tr[data-file='"+name+"']"));
+    this.setCurrentListElem = element(by.css("tr[data-file='" + name + "']"));
   }
 
   FilesPage.prototype.openRenameForm = function(name) {
-    this.moveMouseTo("tr[data-file='"+name+"']");
-    var renameId = by.css("tr[data-file='"+name+"'] a.action.action-rename");
+    this.moveMouseTo("tr[data-file='" + name + "']");
+    var renameId = by.css("tr[data-file='" + name + "'] a.action.action-rename");
     element(renameId).click();
   };
 
