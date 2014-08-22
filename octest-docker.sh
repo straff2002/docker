@@ -4,10 +4,10 @@
 #===========
 
 #Get insecure key if not available
-if [[ ! -f ./insecure_key ]]; then
+if [[ ! -f configs/insecure_key ]]; then
 	echo "Downloading insecure_key file for ssh connection"
-	curl -o insecure_key -fSL https://github.com/phusion/baseimage-docker/raw/master/image/insecure_key
-	chmod 600 insecure_key
+	curl -o configs/insecure_key -fSL https://github.com/phusion/baseimage-docker/raw/master/image/insecure_key
+	chmod 600 configs/insecure_key
 fi
 
 #Start OwnCloud-apache-Containerd
@@ -29,8 +29,8 @@ protractor $TESTS/protractor_conf.js --params.baseUrl=$IP --suite install
 #php occ app:disable firstrunwizard
 
 # Disabling the firstrunwizard via ssh
-scp -i insecure_key ./disable_firstrunwizard.sh root@$IP:/tmp/disable_firstrunwizard.sh
-ssh -i insecure_key root@$IP /tmp/disable_firstrunwizard.sh
+scp -i configs/insecure_key configs/disable_firstrunwizard.sh root@$IP:/tmp/disable_firstrunwizard.sh
+ssh -i configs/insecure_key root@$IP /tmp/disable_firstrunwizard.sh
 
 cd $TESTS
 protractor $TESTS/protractor_conf.js --params.baseUrl=$IP --suite login
