@@ -9,11 +9,8 @@ then
 fi
 
 NAME=$1 
-BASE_PATH=$(dirname $0)
-cd $BASE_PATH
-
-INSTALL_PATH="$PWD/www"
-SOURCE_PATH="$PWD/source-cache"
+INSTALL_PATH="$PWD/systems"
+SOURCE_PATH="$PWD/sources"
 
 # default is community edition  
 EDITION="community"
@@ -54,4 +51,3 @@ rm -rf owncloud
 cd $INSTALL_FOLDER/apps
 APP_COUNT=$( ls -1 | wc -l )
 echo "Installed $APP_COUNT apps"
-
