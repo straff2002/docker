@@ -54,9 +54,10 @@ exports.config = {
   // specs: ['tests/**/*_spec.js'],
   
   suites: {
-    install: 'tests/install/**/*_spec.js',
-    login:  'tests/login/**/*_spec.js',
-    files: 'tests/files/**/*_spec.js'
+    install: 'specs/install/**/*_spec.js',
+    login:  'specs/login/**/*_spec.js',
+    files: 'specs/files/**/*_spec.js',
+    share: 'specs/share/**/*_spec.js',
     // search: [
     //   'tests/search/**/*Spec.js',
     //   'tests/user_search/**/*Spec.js'
