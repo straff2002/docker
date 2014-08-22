@@ -10,7 +10,7 @@ if [[ ! -f ./insecure_key ]]; then
 	chmod 600 insecure_key
 fi
 
-#Start OwnCloud-apache-Container
+#Start OwnCloud-apache-Containerd
 docker run -dp 80:80 --name="ownCloud" oc-apache /sbin/my_init --enable-insecure-key
 
 #Get IP of ownCLoud-Server
@@ -22,9 +22,6 @@ TESTS=$(dirname $0)
 cd $TESTS
 TESTS=$PWD
 
-#Braucht man nicht weil das Image ja ein frisch installiertes oc enthält
-rm -rf $SERVER_DIR; ocsetup test -c
-
 cd $TESTS
 protractor $TESTS/protractor_conf.js --params.baseUrl=$IP --suite install
 
@@ -32,7 +29,8 @@ protractor $TESTS/protractor_conf.js --params.baseUrl=$IP --suite install
 #php occ app:disable firstrunwizard
 
 # Disabling the firstrunwizard via ssh
-ssh -i insecure_key root@$IP ./disable_firstrunwizard.sh
+scp -i insecure_key ./disable_firstrunwizard.sh root@$IP:/tmp/disable_firstrunwizard.sh
+ssh -i insecure_key root@$IP /tmp/disable_firstrunwizard.sh
 
 cd $TESTS
 protractor $TESTS/protractor_conf.js --params.baseUrl=$IP --suite login
