@@ -5,6 +5,17 @@ Overview
 * Run test suites on local ownCloud installation or ownCloud docker container.
 * Development of docker images for scaleable ownCloud installations.
 
+Setup
+=====
+
+Install [Docker](https://www.docker.com/) 
+
+The acceptance tests use protractor, running on node.js
+See [Setup Specs](specs/readme.md) for further setup notes for the testing framework.
+
+Install docker and nodejs on a linux machine or VM for easy usage.
+
+
 Run with Docker
 ===============
 
