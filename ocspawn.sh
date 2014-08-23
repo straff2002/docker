@@ -3,7 +3,7 @@
 if [ "$#" -eq 0 ] 
 then 
   echo "Please specify a name of the installation"
-  echo "./setup-owncloud [-i] name"
+  echo "./ocspawn.sh [-i] name"
   echo
   echo "-i  auto install with default config"
   exit

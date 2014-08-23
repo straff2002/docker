@@ -1,67 +1,54 @@
-docker
-======
-https://coreos.com/blog/Running-etcd-in-Containers/
+Overview
+========
 
-export PUBLIC_IP=127.0.0.1
-docker run -d -p 8001:8001 -p 5001:5001 coreos/etcd -peer-addr ${PUBLIC_IP}:8001 -addr ${PUBLIC_IP}:5001 -name etcd-node1
-docker run -d -p 8002:8002 -p 5002:5002 coreos/etcd -peer-addr ${PUBLIC_IP}:8002 -addr ${PUBLIC_IP}:5002 -name etcd-node2 -peers ${PUBLIC_IP}:8001,${PUBLIC_IP}:8002,${PUBLIC_IP}:8003
+Acceptance tests for ownCloud with protractor.
+Run test suites on local ownCloud installation or ownCloud docker container.
+Development of docker images for scaleable ownCloud installations.
 
-curl -L 127.0.0.1:5001/v2/stats/leader
+Run with Docker
+===============
 
-docker run -d --name etcd coreos/etcd 
+build-docker.sh
+---------------
 
+Build all docker images in folder ```images```
+Images: 
 
+* ```oc-apache``` ownCloud running in apache
+* ```oc-nginx``` ownCloud running in nginx
+* ```db-mysql``` mysql container
+* ```data-vol``` data persistence container
 
-https://registry.hub.docker.com/u/bobtfish/synapse-etcd-amb/
-docker run -d -e SYNAPSE_APP=testservice -e SYNAPSE_PORT=8000 --link etcd:etcd --name testservice-amb bobtfish/synapse-etcd-amb
-docker run -d --link testservice-amb:testservice you/your_app
+start-docker.sh
+---------------
 
+Runs ownCloud in docker container "oc-test" with selected server, db and data volumne.
+TODO: make selectable with arguments
 
-docker run -d you/testservice --expose 8080 --name testservice1
-docker run -d -e NERVE_SERVICE=testservice --link etcd:etcd --link testservice1:testservice1 --name testservice-registration bobtfish/nerve-etcd
+octest-docker.sh
+----------------
 
+Run the test suites on the ownCloud instance in "oc-test" docker container.
 
-Service Registry with Synapse
------------------------------
+Run without Docker
+==================
 
-Add the following line to ```/etc/default/docker``` to enable Docker API on tcp
-```
-DOCKER_OPTS="-H 127.0.0.1:4243"
-```
+ocsetup.sh
+----------
 
-```
-sudo service docker.io restart
-export DOCKER_HOST=tcp://127.0.0.1:4243
-```
+Setup script for ownCloud in folder ```www``` with a given name.
+The downloaded install packages are cached in folder ```source-cache``` for speedup.
 
-```
-sudo apt-get install build-essential ruby ruby-dev haproxy
-sudo gem install synapse
-```
+octest.sh
+---------
 
-Edit ```/etc/default/haproxy``` to set ENABLED to 1
+Setup new ownCloud instance with ocsetup.sh and run the test suites.
 
-```
-sudo service haproxy start
-```
+ocspawn.sh
+----------
 
-```
-sudo synapse -c synapse.json.conf
-```
+Spawn multiple instances of ownCloud in docker containers.
+Simple ownCloud container with a autoconfig for sqlite.
+Basic multi tenant and scaling approach.
+TODO: Setup loadbalancer
 
-
-
-
----
-
-Run etcd from coreos
-
-```
-docker run -d --name etcd -p 4001:4001 -p 7001:7001 coreos/etcd
-```
-
-```
-docker run -d --net host --name docker-discover -e ETCD_HOST=1.2.3.4:4001 -p 127.0.0.1:1936:1936 -t jwilder/docker-discovery
-```
-
-haproxy running on http://localhost:1936
