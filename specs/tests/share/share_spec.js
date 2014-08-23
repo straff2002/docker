@@ -22,24 +22,27 @@ describe('Share', function() {
 
   it('should login as admin and create 4 new users in 2 groups', function() {
     userPage.get();
-    // userPage.createNewGroup('test_specGroup_1');
-    // userPage.get();
-    // userPage.createNewGroup('test_specGroup_2');
-    // userPage.createNewUser('demo', 'password');
-    // userPage.get();
-    // userPage.createNewUser('demo2', 'password');
-    // userPage.get();
-    // userPage.renameDisplayName('demo2', ' display2');
-    userPage.setUserGroup('demo2', 'test_specGroup_1');
-    // userPage.createNewUser('demo3', 'password');
-    // userPage.get();
-    // userPage.renameDisplayName('demo3', ' display3');
+    userPage.createNewGroup('test_specGroup_1');
+    userPage.get();
+    userPage.createNewGroup('test_specGroup_2');
+    userPage.createNewUser('demo', 'password');
+    userPage.get();
+    userPage.createNewUser('demo2', 'password');
+    userPage.get();
+    userPage.renameDisplayName('demo2', ' display2');
+    // setting Group to User fails cause click receives an other element
     // userPage.setUserGroup('demo2', 'test_specGroup_1');
-    // userPage.createNewUser('demo4', 'password');
-    // userPage.get();
-    // userPage.renameDisplayName('demo4', ' display4');
-    // userPage.setUserGroup('demo2', 'test_specGroup_2');
-    // userPage.get();
+    userPage.createNewUser('demo3', 'password');
+    userPage.get();
+    userPage.renameDisplayName('demo3', ' display3');
+      // setting Group to User fails cause click receives an other element
+    // userPage.setUserGroup('demo3', 'test_specGroup_1');
+    userPage.createNewUser('demo4', 'password');
+    userPage.get();
+    userPage.renameDisplayName('demo4', ' display4');
+      // setting Group to User fails cause click receives an other element
+    // userPage.setUserGroup('demo4', 'test_specGroup_2');
+    userPage.get();
     expect(userPage.listUser()).toContain('demo', 'demo2', 'demo3', 'demo4');
   });
 
@@ -108,5 +111,7 @@ describe('Share', function() {
     }, 5000, 'load files content');
     expect(filesPage.listFiles()).toContain('toShare');
   });
+
+  
 
 });

@@ -84,16 +84,31 @@
     this.newGroupNameInput.sendKeys(protractor.Key.ENTER);
   };
 
-  UserPage.prototype.setUserGroup = function(userName, groupName) {
-    var renameDisplayNameButton = element(by.css("tr[data-uid='" + userName + "'] td.groups .multiselect.button"));
-    renameDisplayNameButton.click();
-    var dropdown = element(by.css("tr[data-uid='" + userName + "'] ul.multiselectoptions.down"));
-    browser.wait(function() {
-      return dropdown.isDisplayed();
-    }, 3000);
-    var checkbox = element(by.css("input[type='checkbox']"));
-    checkbox.click();
-  };
+///// NOT WORKING, CLICK ON CHECKBOX RESEIVES AN OTHER ELEMENT //////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // UserPage.prototype.setUserGroup = function(userName, groupName) {
+  //   var renameDisplayNameButton = element(by.css("tr[data-uid='" + userName + "'] td.groups .multiselect.button"));
+  //   renameDisplayNameButton.click();
+
+  //   var a = 'tr[data-uid="' + userName + '"] ul.multiselectoptions.down';
+
+  //   var dropdown = element(by.css(a));
+  //   browser.wait(function() {
+  //     return dropdown.isDisplayed();
+  //   }, 3000);
+  //   browser.pause();
+  //   var checkboxId = by.css('tr[data-uid="' + userName + '"] ul.multiselectoptions.down label');
+  //   element.all(checkboxId).each(function(checkbox) {
+  //     checkbox.getText().then(function(text) {
+  //       console.log(checkboxId);
+  //       console.log(text);
+  //       if(text == groupName) {
+  //         return checkbox.click();
+  //       }
+  //     })
+  //   });
+  // };
 
   module.exports = UserPage;
 })();

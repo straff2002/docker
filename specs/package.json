@@ -8,7 +8,9 @@
   },
   "author": "Felix Böhm",
   "dependencies": {
-    "protractor": "^1.0.0"
+    "protractor": "^1.0.0",
+    "request": "^2.40.0",
+    "xml2js": "^0.4.4"
   },
   "devDependencies": {
     "gulp": "^3.8.7",
