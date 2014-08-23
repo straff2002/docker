@@ -3,46 +3,29 @@
 BASE_PATH=$(dirname $0)
 cd $BASE_PATH
 
-TESTS=$PWD/tests
-IMAGE_PATH=$PWD/images/owncloud-apache
-IMAGE_NAME="oc-apache"
-NAME="oc-test"
-
-#Get insecure key if not available
-if [ ! -f configs/insecure_key ]; then
-	echo "Downloading insecure_key file for ssh connection"
-	curl -o configs/insecure_key -fSL https://github.com/phusion/baseimage-docker/raw/master/image/insecure_key
-	chmod 600 configs/insecure_key
-fi
-
-if [ $(docker images | grep $IMAGE_NAME -c ) -ne 0 ]
-then
-	echo "Image exists"
-else
-	echo "Building image"
-	docker build -t $IMAGE_NAME $IMAGE_PATH
-fi
-
-if [ $(docker ps -a | grep -c $NAME) -ne 0 ]
-then
-  docker stop $NAME
-  docker rm $NAME
-	echo "Restart test system"
-fi
-
-#Start OwnCloud-apache-Containerd
-docker run -dp 8888:80 -h $NAME --name=$NAME $IMAGE_NAME /sbin/my_init --enable-insecure-key
+TESTS=$PWD/specs
+SERVER_NAME="oc-test"
+PORT=8888
 
 #Get IP of ownCLoud-Server
-IP=$(docker inspect -f "{{ .NetworkSettings.IPAddress }}" $NAME) 
+IP=$(docker inspect -f "{{ .NetworkSettings.IPAddress }}" $SERVER_NAME) 
+while ! ssh -oStrictHostKeyChecking=no -i configs/insecure_key root@$IP php -v > /dev/null 2>&1
+do
+  sleep 1
+done
 
-protractor $TESTS/protractor_conf.js --params.baseUrl=$IP --suite install
+BASE_URL="http://127.0.0.1:$PORT/"
 
-#cd $SERVER_DIR
-#php occ app:disable firstrunwizard
+echo "Testing on $BASE_URL"
+# Install with install test suite
+# protractor $TESTS/protractor_conf.js --params.baseUrl=$BASE_URL --suite install
 
 # Disabling the firstrunwizard via ssh
 scp -i configs/insecure_key configs/disable_firstrunwizard.sh root@$IP:/tmp/disable_firstrunwizard.sh
 ssh -i configs/insecure_key root@$IP /tmp/disable_firstrunwizard.sh
 
-protractor $TESTS/protractor_conf.js --params.baseUrl=$IP --suite login
+protractor $TESTS/protractor_conf.js --params.baseUrl=$BASE_URL --suite login
+# protractor $TESTS/protractor_conf.js --params.baseUrl=$BASE_URL --specs specs/tests/login/authentication_spec.js
+# protractor $TESTS/protractor_conf.js --params.baseUrl=$BASE_URL --specs specs/tests/login/change_password_spec.js
+# protractor $TESTS/protractor_conf.js --params.baseUrl=$BASE_URL --specs specs/tests/login/new_user_spec.js
+# protractor $TESTS/protractor_conf.js --params.baseUrl=$BASE_URL --specs specs/tests/login/username_cases_spec.js

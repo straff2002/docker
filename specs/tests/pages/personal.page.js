@@ -42,8 +42,14 @@
     // result need some time to display
     var changed = this.passwordChanged;
     var error = this.passwordError;   
+    var ready = false;
     browser.wait(function () {
-      return changed.isDisplayed() || error.isDisplayed(); 
+      changed.isDisplayed().then(function(c) {
+        error.isDisplayed().then(function(e) {
+          ready = c || e;
+        });
+      });
+      return ready;
     }, 8000, 'personal password change result not displayed');
   };
   

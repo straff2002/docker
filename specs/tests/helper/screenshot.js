@@ -3,7 +3,7 @@
   var fs = require('fs');
   
   var Screenshot = function(data, filename) {
-    this.screenshotPath = process.cwd() + '/screenshots/';
+    this.screenshotPath = __dirname + '/../../screenshots/';
     
     display.log('Created screenshot: ' + this.screenshotPath + filename);
     var stream = fs.createWriteStream(this.screenshotPath + filename);

@@ -54,6 +54,9 @@ describe('Installation', function() {
     
     installPage.installButton.click().then(function() {
       expect(browser.getCurrentUrl()).toContain('index.php/apps/files/');
+      browser.takeScreenshot().then(function (png) {
+        new Screenshot(png, 'InstallFinished.png');
+      });
     });
   });
   

@@ -1,6 +1,5 @@
 var LoginPage = require('../pages/login.page.js');
 var UserPage = require('../pages/user.page.js');
-var FirstRunWizardPage = require('../pages/firstRunWizard.page.js');
 var Screenshot = require('../helper/screenshot.js');
 
 describe('New User', function() {
@@ -23,13 +22,10 @@ describe('New User', function() {
     expect(userPage.listUser()).toContain('demo');
   });
   
-  it('should login with a new user and show firstRunWizard', function() {    
+  it('should login with a new user', function() {    
     loginPage.login('demo', 'demo');
     
     expect(browser.getCurrentUrl()).toContain('index.php/apps/files/');
-    
-    var firstRunWizardPage = new FirstRunWizardPage(params.baseUrl);
-    expect(firstRunWizardPage.isFirstRunWizardPage()).toBeTruthy();
     browser.takeScreenshot().then(function (png) {
         new Screenshot(png, 'LoginAsNewUser.png');
     });

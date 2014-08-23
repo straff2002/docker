@@ -45,14 +45,9 @@ describe('Authentication', function() {
     expect(browser.getCurrentUrl()).not.toContain('index.php/apps/files/');
   });
   
-  it('should login admin user and close firstrunwizard', function() {  
-    // workaround: Test needed to close firstrunwizard
+  it('should login admin user', function() {  
+    // Assumes FirstRunWizard to be disabled
     loginPage.login(params.login.user, params.login.password);
-    
-    var firstRunWizardPage = new FirstRunWizardPage(params.baseUrl);
-    firstRunWizardPage.waitForDisplay();
-    firstRunWizardPage.close();
-    
     expect(browser.getCurrentUrl()).toContain('index.php/apps/files/');      
   });
 

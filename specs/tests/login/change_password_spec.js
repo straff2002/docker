@@ -1,7 +1,6 @@
 var LoginPage = require('../pages/login.page.js');
 var UserPage = require('../pages/user.page.js');
 var PersonalPage = require('../pages/personal.page.js');
-var FirstRunWizardPage = require('../pages/firstRunWizard.page.js');
 
 describe('Change Password  - Valid Usernames', function() {
   var params = browser.params;
@@ -26,13 +25,9 @@ describe('Change Password  - Valid Usernames', function() {
     expect(userPage.listUser()).toContain('demo');
   });
 
-  it('should login test user and close firstrunwizard', function() {  
+  it('should login test user', function() {  
     // workaround: Test needed to close firstrunwizard
     loginPage.login('demo', 'password');
-    var firstRunWizardPage = new FirstRunWizardPage(params.baseUrl);
-    firstRunWizardPage.waitForDisplay();
-    firstRunWizardPage.close();
-    
     expect(browser.getCurrentUrl()).toContain('index.php/apps/files/');      
   });
         
@@ -46,7 +41,7 @@ describe('Change Password  - Valid Usernames', function() {
     expect(personalPage.passwordError.isDisplayed()).toBeFalsy();
   });
   
-  xit('should login and change password to super save password in personal settings', function() {    
+  it('should login and change password to super save password in personal settings', function() {    
     loginPage.login('demo', 'newpassword');
     var personalPage = new PersonalPage(params.baseUrl);
     personalPage.get();
@@ -58,7 +53,7 @@ describe('Change Password  - Valid Usernames', function() {
     expect(personalPage.passwordError.isDisplayed()).toBeFalsy();
   });
   
-  xit('should login and not change password with wrong old password in personal settings', function() {    
+  it('should login and not change password with wrong old password in personal settings', function() {    
     loginPage.login('demo', long_pass);
     var personalPage = new PersonalPage(params.baseUrl);
     personalPage.get();
@@ -68,7 +63,7 @@ describe('Change Password  - Valid Usernames', function() {
   });
   
   // %, &, @ and /
-  xit('should change password including specialcharacters in personal settings', function() {    
+  it('should change password including specialcharacters in personal settings', function() {    
     loginPage.login('demo', long_pass);
     var personalPage = new PersonalPage(params.baseUrl);
     personalPage.get();
@@ -77,12 +72,12 @@ describe('Change Password  - Valid Usernames', function() {
     expect(personalPage.passwordError.isDisplayed()).toBeFalsy();
   });
  
-  xit('should login with password including specialcharacters', function() {    
+  it('should login with password including specialcharacters', function() {    
     loginPage.login('demo', special_pass);
     expect(browser.getCurrentUrl()).toContain('index.php/apps/files/');      
   });
   
-  xit('should login as admin and change password for test users ', function() {
+  it('should login as admin and change password for test users ', function() {
     loginPage.login(params.login.user, params.login.password);
     userPage = new UserPage(params.baseUrl);
     userPage.get();
@@ -92,7 +87,7 @@ describe('Change Password  - Valid Usernames', function() {
     });
   });
   
-  xit('should login with password changed by admin', function() {    
+  it('should login with password changed by admin', function() {    
     loginPage.login('demo', 'password');
     expect(browser.getCurrentUrl()).toContain('index.php/apps/files/');      
   });
