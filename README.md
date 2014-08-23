@@ -10,7 +10,7 @@ Setup
 
 Install [Docker](https://www.docker.com/) 
 
-The acceptance tests use protractor, running on node.js
+The acceptance tests use protractor, running on [node.js](http://nodejs.org/).
 See [Setup Specs](specs/readme.md) for further setup notes for the testing framework.
 
 Install docker and nodejs on a linux machine or VM for easy usage.
