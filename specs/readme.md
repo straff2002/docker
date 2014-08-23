@@ -1,5 +1,5 @@
-Setup
------
+Spec Setup
+==========
 
 ```
 npm install
