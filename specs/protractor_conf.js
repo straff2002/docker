@@ -23,45 +23,11 @@ exports.config = {
     }
   },
 
-  // Headless testing with Phantomjs
-  // capabilities: {
-  //   'browserName': 'phantomjs',
-  //
-  //   /*
-  //    * Can be used to specify the phantomjs binary path.
-  //    * This can generally be ommitted if you installed phantomjs globally.
-  //    */
-  //   'phantomjs.binary.path':'./node_modules/phantomjs/bin/phantomjs',
-  //
-  //   /*
-  //    * Command line arugments to pass to phantomjs.
-  //    * Can be ommitted if no arguments need to be passed.
-  //    * Acceptable cli arugments: https://github.com/ariya/phantomjs/wiki/API-Reference#wiki-command-line-options
-  //    */
-  //   'phantomjs.cli.args':['--logfile=PATH', '--loglevel=DEBUG']
-  // },
-  
-  // TODO: Mobile? See: https://github.com/angular/protractor/blob/master/docs/browser-setup.md#setting-up-protractor-with-appium---androidchrome
-  // multiCapabilities: [{
-  //   'browserName': 'firefox'
-  // }, {
-  //   'browserName': 'chrome'
-  // }]
-
-  // Spec patterns are relative to the current working directly when
-  // protractor is called.
-  // specs: ['example_spec.js'],
-  // specs: ['tests/**/*_spec.js'],
-  
   suites: {
     install: 'tests/install/**/*_spec.js',
     login:  'tests/login/**/*_spec.js',
     files: 'tests/files/**/*_spec.js',
     share: 'tests/share/**/*_spec.js',
-    // search: [
-    //   'tests/search/**/*Spec.js',
-    //   'tests/user_search/**/*Spec.js'
-    // ]
   },
 
   // seleniumAddress: 'http://0.0.0.0:4444/wd/hub',
@@ -107,3 +73,30 @@ exports.config = {
     jasmine.getEnv().addReporter(spec_reporter);
   }
 };
+
+
+// Headless testing with Phantomjs
+// capabilities: {
+//   'browserName': 'phantomjs',
+//
+//   /*
+//    * Can be used to specify the phantomjs binary path.
+//    * This can generally be ommitted if you installed phantomjs globally.
+//    */
+//   'phantomjs.binary.path':'./node_modules/phantomjs/bin/phantomjs',
+//
+//   /*
+//    * Command line arugments to pass to phantomjs.
+//    * Can be ommitted if no arguments need to be passed.
+//    * Acceptable cli arugments: https://github.com/ariya/phantomjs/wiki/API-Reference#wiki-command-line-options
+//    */
+//   'phantomjs.cli.args':['--logfile=PATH', '--loglevel=DEBUG']
+// },
+
+// TODO: Mobile? See: https://github.com/angular/protractor/blob/master/docs/browser-setup.md#setting-up-protractor-with-appium---androidchrome
+// multiCapabilities: [{
+//   'browserName': 'firefox'
+// }, {
+//   'browserName': 'chrome'
+// }]
+

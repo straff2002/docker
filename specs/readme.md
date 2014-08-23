@@ -9,7 +9,6 @@ npm install
 Install as global commands
 ```
 npm install -g protractor
-npm install -g gulp
 ```
 
 Run tests
