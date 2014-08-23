@@ -11,7 +11,7 @@ Run with Docker
 build-docker.sh
 ---------------
 
-Build all docker images in folder ```images```
+Build all docker images in folder images
 Images: 
 
 * ```oc-apache``` ownCloud running in apache
@@ -30,6 +30,14 @@ octest-docker.sh
 
 Run the test suites on the ownCloud instance in "oc-test" docker container.
 
+ocspawn-docker.sh
+-----------------
+
+Spawn multiple instances of ownCloud in docker containers.
+Simple ownCloud container with a autoconfig for sqlite.
+Basic multi tenant and scaling approach.
+TODO: Setup loadbalancer
+
 Run without Docker
 ==================
 
@@ -42,13 +50,5 @@ The downloaded install packages are cached in folder ```source-cache``` for spee
 octest.sh
 ---------
 
-Setup new ownCloud instance with ocsetup.sh and run the test suites.
-
-ocspawn.sh
-----------
-
-Spawn multiple instances of ownCloud in docker containers.
-Simple ownCloud container with a autoconfig for sqlite.
-Basic multi tenant and scaling approach.
-TODO: Setup loadbalancer
+Setup new ownCloud instance with ```ocsetup.sh``` and run the test suites.
 
