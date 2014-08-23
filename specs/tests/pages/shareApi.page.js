@@ -1,7 +1,8 @@
 (function() { 
   var request = require('request');
   var parseString = require('xml2js').parseString;
-
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0" // Avoids DEPTH_ZERO_SELF_SIGNED_CERT error for self-signed certs
+  
   var ShareApi = function(baseUrl) {
     this.baseUrl = baseUrl;
     this.path = 'ocs/v1.php/apps/files_sharing/api/v1/shares';
@@ -14,11 +15,10 @@
 
   ShareApi.prototype.http = function (method) {
     var url = this.url;
-    var method = method;
-    console.log(this);
 
     var defer = protractor.promise.defer();
     console.log("Calling", this.url);
+
 
     request({
       uri: url,
