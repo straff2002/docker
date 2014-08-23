@@ -1,9 +1,9 @@
 Overview
 ========
 
-Acceptance tests for ownCloud with protractor.
-Run test suites on local ownCloud installation or ownCloud docker container.
-Development of docker images for scaleable ownCloud installations.
+* Acceptance tests for ownCloud with protractor.
+* Run test suites on local ownCloud installation or ownCloud docker container.
+* Development of docker images for scaleable ownCloud installations.
 
 Run with Docker
 ===============
