@@ -56,7 +56,7 @@ exports.config = {
       displayFailuresSummary: false, // display summary of all failures after execution
       displaySuccessfulSpec: true,  // display each successful spec
       displayFailedSpec: true,      // display each failed spec
-      displaySkippedSpec: true,    // display each skipped spec
+      displaySkippedSpec: false,    // display each skipped spec
       displaySpecDuration: true,   // display each spec duration
       colors: {
         success: 'green',
