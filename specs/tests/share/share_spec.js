@@ -4,23 +4,21 @@ var FilesPage = require('../pages/files.page.js');
 var FirstRunWizardPage = require('../pages/firstRunWizard.page.js');
 
 
-describe('Share', function() {
+ddescribe('Share', function() {
   var params = browser.params;
   var loginPage;
   var userPage
   var filesPage;
-  var firstRunWizardPage;
 
   beforeEach(function() {
     isAngularSite(false);
     loginPage = new LoginPage(params.baseUrl);
     userPage = new UserPage(params.baseUrl);
     filesPage = new FilesPage(params.baseUrl);
-    firstRunWizardPage = new FirstRunWizardPage(params.baseUrl);
-    filesPage.getAsUser(params.login.user, params.login.password);
   });
 
   it('should login as admin and create 4 new users in 2 groups', function() {
+    filesPage.getAsUser(params.login.user, params.login.password);
     userPage.get();
     userPage.createNewGroup('test_specGroup_1');
     userPage.get();
@@ -47,31 +45,33 @@ describe('Share', function() {
   });
 
 
-  xit('should share a folder with another user by username', function() {
-    filesPage.createNewFolder('toShare');
-    filesPage.get();
-    filesPage.openShareForm('toShare');
-    filesPage.shareWithForm.sendKeys('demo');
-    browser.wait(function(){
-      return filesPage.sharedWithDropdown.isDisplayed();
-    }, 5000);
-    filesPage.shareWithForm.sendKeys(protractor.Key.ENTER);
+  it('should share a folder with another user by username', function() {
+    filesPage.getAsUser(params.login.user, params.login.password);
+    filesPage.createNewFolder('toShare_1');
+    browser.sleep(500);
+    filesPage.shareFile('toShare_1', 'demo');
 
     loginPage.logout();
     loginPage.login('demo', 'password');
-    firstRunWizardPage.waitForDisplay();
-    firstRunWizardPage.close();
-    filesPage.get();
-    expect(filesPage.listFiles()).toContain('toShare');
+    expect(filesPage.listFiles()).toContain('toShare_1');
   });
 
-  xit('should share a folder with 3 another user by display name', function() {
-    filesPage.openShareForm('toShare');
-    filesPage.shareWithForm.sendKeys('display2');
-    browser.wait(function(){
-      return filesPage.sharedWithDropdown.isDisplayed();
-    }, 3000);
-    filesPage.shareWithForm.sendKeys(protractor.Key.ENTER);
+  it('should share a folder including special characters', function() {
+    filesPage.getAsUser(params.login.user, params.login.password);
+    filesPage.createNewFolder('sP€c!@L');
+    browser.sleep(500);
+    filesPage.shareFile('sP€c!@L', 'demo');
+
+    loginPage.logout();
+    loginPage.login('demo', 'password');
+    expect(filesPage.listFiles()).toContain('sP€c!@L');
+  });
+
+  it('should share a folder with 3 another user by display name', function() {
+    filesPage.getAsUser(params.login.user, params.login.password);
+    filesPage.createNewFolder('toShare_2');
+    browser.sleep(500);
+    filesPage.shareFile('toShare_2', 'display2');
 
     filesPage.shareWithForm.sendKeys(protractor.Key.DELETE);
     filesPage.shareWithForm.sendKeys('display3');
@@ -89,29 +89,118 @@ describe('Share', function() {
 
     loginPage.logout();
     loginPage.login('demo2', 'password');
-    var button = filesPage.newButton;
-    browser.wait(function() {
-      return button.isDisplayed();
-    }, 5000, 'load files content');
-    expect(filesPage.listFiles()).toContain('toShare');
+    expect(filesPage.listFiles()).toContain('toShare_2');
 
     loginPage.logout();
     loginPage.login('demo3', 'password');
-    var button = filesPage.newButton;
-    browser.wait(function() {
-      return button.isDisplayed();
-    }, 5000, 'load files content');
-    expect(filesPage.listFiles()).toContain('toShare');
+    expect(filesPage.listFiles()).toContain('toShare_2');
 
     loginPage.logout();
     loginPage.login('demo4', 'password');
-    var button = filesPage.newButton;
-    browser.wait(function() {
-      return button.isDisplayed();
-    }, 5000, 'load files content');
-    expect(filesPage.listFiles()).toContain('toShare');
+    expect(filesPage.listFiles()).toContain('toShare_2');
   });
 
+  it('should grant second users CRUDS rights to their folder', function() {
+    filesPage.getAsUser('demo2', 'password');
+    filesPage.getFolder('toShare_2');
+
+    //create file
+    filesPage.createNewTxtFile('inSharedBySecond');
+    filesPage.createNewTxtFile('toBeDeleted');
+    expect(filesPage.listFiles()).toContain('inSharedBySecond' ,'toBeDeleted');
+
+    //delete file
+    filesPage.deleteFile('toBeDeleted.txt');
+    browser.sleep(800);
+    expect(filesPage.listFiles()).not.toContain('toBeDeleted');
+    
+
+    //share file
+    filesPage.shareFile('inSharedBySecond.txt', 'demo');
+
+    loginPage.logout();
+    loginPage.login('demo', 'password');
+    filesPage.renameFile('inSharedBySecond.txt', 'renamedBySecond')
+    expect(filesPage.listFiles()).toContain('renamedBySecond');
+    filesPage.deleteFile('renamedBySecond.txt');
+  });
+
+  it('should delete the root folder shared with a user account by another user', function() {
+    filesPage.getAsUser('demo2', 'password');
+    filesPage.deleteFile('toShare_2');
+    browser.sleep(800);
+    expect(filesPage.listFiles()).not.toContain('toShare_2');
+
+    loginPage.logout();
+    loginPage.login(params.login.user, params.login.password);
+    expect(filesPage.listFiles()).toContain('toShare_2');
+  });
+
+  it('should delete a file shared with a user, only form user if user deletes it', function() {
+    filesPage.getAsUser(params.login.user, params.login.password);
+    filesPage.createNewTxtFile('toDeleteByUser');
+    filesPage.shareFile('toDeleteByUser.txt', 'demo');
+
+    loginPage.logout();
+    loginPage.login('demo', 'password');
+    filesPage.deleteFile('toDeleteByUser.txt');
+    browser.sleep(800);
+    expect(filesPage.listFiles()).not.toContain('inSharedBySecond');
+
+    loginPage.logout();
+    loginPage.login(params.login.user, params.login.password);
+    expect(filesPage.listFiles()).toContain('toDeleteByUser');
+    filesPage.deleteFile('toDeleteByUser.txt');
+  });
+
+  it('should delete a file in a shared folder, from all', function() {
+    filesPage.getAsUser(params.login.user, params.login.password);
+    filesPage.getFolder('toShare_1');
+    filesPage.createNewTxtFile('toDeleteFromAll');
+
+    loginPage.logout();
+    loginPage.login('demo', 'password');
+    filesPage.getFolder('toShare_1');
+    filesPage.deleteFile('toDeleteFromAll.txt');
+    browser.sleep(800);
+    expect(filesPage.listFiles()).not.toContain('toDeleteFormAll');
+
+    loginPage.logout();
+    loginPage.login(params.login.user, params.login.password);
+    filesPage.getFolder('toShare_1');
+    expect(filesPage.listFiles()).not.toContain('toDeleteFromAll');
+  });
+
+  it('should delete a file shared with a user, form all if owner deletes it', function() {
+    filesPage.getAsUser(params.login.user, params.login.password);
+    filesPage.createNewTxtFile('toDeleteByOwner');
+    filesPage.shareFile('toDeleteByOwner.txt', 'demo');
+
+    loginPage.logout();
+    loginPage.login('demo', 'password');
+    expect(filesPage.listFiles()).toContain('toDeleteByOwner');
+
+    loginPage.logout();
+    loginPage.login(params.login.user, params.login.password);
+    filesPage.deleteFile('toDeleteByOwner.txt');
   
+    loginPage.logout();
+    loginPage.login('demo', 'password');
+    expect(filesPage.listFiles()).not.toContain('toDeleteByOwner');
+
+  });
+
+  // iit('should not be possible if the "re-share" option is removed', function() {
+  //   filesPage.getAsUser(params.login.user, params.login.password);
+  //   filesPage.createNewFolder('noReshare');
+  //   filesPage.shareFile('noReshare', 'demo');
+  //   filesPage.disableReshare('noReshare', 'demo');
+  
+  //   loginPage.logout();
+  //   loginPage.login('demo', 'password');
+
+  //   expect(filesPage.checkReshareability('noReshare')).toBeFalsy();
+
+  // });
 
 });

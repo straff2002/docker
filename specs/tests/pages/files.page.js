@@ -101,7 +101,16 @@
     this.openRenameForm(name);
     var renameForm = by.css("tr[data-file='"+name+"'] form input");
     element(renameForm).sendKeys(newName);
-    element(renameForm).sendKeys(protractor.Key.ENTER);
+    element(renameForm).sendKeys(protractor.Key.ENTER);    
+
+    // TODO: find correct wait trigger
+    // browser.wait(function() {
+    //  // return 
+    // });
+
+    // TODO: Timing Workaround
+    browser.sleep(800);
+
   };
 
   FilesPage.prototype.emptyRenameFile = function(name) {
@@ -129,10 +138,49 @@
     return element(removeId).click();
   };
 
-  FilesPage.prototype.openShareForm = function(name) {
-    this.moveMouseTo("tr[data-file='"+name+"']");
-    var shareId = by.css("tr[data-file='"+name+"'] a.action.action-share");
+  FilesPage.prototype.openShareForm = function(fileName) {
+    this.moveMouseTo("tr[data-file='"+fileName+"']");
+    var shareId = by.css('tr[data-file="'+fileName+'"] a.action.action-share');
     return element(shareId).click();
+  };
+
+  FilesPage.prototype.shareFile = function(fileName, userName) {
+    this.openShareForm(fileName);
+    this.shareWithForm.sendKeys(userName);
+    var dropdown = this.sharedWithDropdown
+    browser.wait(function(){
+      return dropdown.isDisplayed();
+    }, 3000);
+    this.shareWithForm.sendKeys(protractor.Key.ENTER);
+  }
+
+  FilesPage.prototype.disableReshare = function(fileName, userName) {
+    var disableReshareButton = element(by.css("li[title='" + userName + "'] label input[name='share']"));
+    var dropdown = this.sharedWithDropdown
+
+    // this.openShareForm(fileName);
+
+    // TODO: find correct wait trigger
+    //  browser.wait(function(){
+    //   return dropdown.isDisplayed();
+    // }, 3000);s
+
+    // TODO: Timing Workaround
+    browser.sleep(800);
+    disableReshareButton.click();
+  };
+
+  FilesPage.prototype.checkReshareability = function(fileName) {
+    this.openShareForm(fileName);
+    
+    // TODO: Timing Workaround
+    browser.sleep(800);
+
+    if(false) {
+      return true
+    }else {
+      return false;
+    };
   };
 
   // FilesPage.prototype.showFileVersions = function(name) {
@@ -148,18 +196,26 @@
   // };
 
   FilesPage.prototype.restoreFile = function(id) {
-    this.moveMouseTo("#fileList tr[data-id='"+id+"']");
-    var restoreId = (by.css("#fileList tr[data-id='"+id+"'] a.action.action-restore"));
+    this.moveMouseTo("#fileList tr[data-id='" + id + "']");
+    var restoreId = (by.css("#fileList tr[data-id='" + id + "'] a.action.action-restore"));
     return element(restoreId).click(0);
   };
 
 //================ TXT FILES ============================================//
 
   FilesPage.prototype.createNewTxtFile = function(name) {
-    this.newButton.click()
+    this.newButton.click();
     this.newTextButton.click();
     this.newTextnameForm.sendKeys(name); 
-    this.newTextnameForm.sendKeys(protractor.Key.ENTER);  
+    this.newTextnameForm.sendKeys(protractor.Key.ENTER);
+    
+    // TODO: find correct wait trigger
+    // browser.wait(function() {
+    //  // return 
+    // });
+
+    // TODO: Timing Workaround
+    browser.sleep(800);
   };
 
 //================ FOLDERS ==============================================//
@@ -168,7 +224,15 @@
     this.newButton.click()
     this.newFolderButton.click();
     this.newFoldernameForm.sendKeys(name); 
-    this.newFoldernameForm.sendKeys(protractor.Key.ENTER);  
+    this.newFoldernameForm.sendKeys(protractor.Key.ENTER);
+
+    // TODO: find correct wait trigger
+    // browser.wait(function() {
+    //  // return 
+    // });
+
+    // TODO: Timing Workaround
+    browser.sleep(1000);
   };
 
   FilesPage.prototype.goInToFolder = function(name) {

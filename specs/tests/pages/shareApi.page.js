@@ -12,17 +12,21 @@
       method: "GET"
     };
   };
-
-  ShareApi.prototype.http = function (method) {
+  ShareApi.prototype.http = function (method, path, shareWith, shareType) {
     var url = this.url;
 
     var defer = protractor.promise.defer();
     console.log("Calling", this.url);
 
+    var data = "path=" + path + "&shareWith=" + shareWith + "&shareType=" + shareType; 
+
+    console.log(data);
+
 
     request({
       uri: url,
       method: method,
+      dody: data,
       followRedirect: true,
       auth: {
         user: "admin", 

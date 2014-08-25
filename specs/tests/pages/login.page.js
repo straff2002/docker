@@ -11,6 +11,7 @@
     // On Page when logged in     
     this.menuButton = element(by.id('expand'));
     this.logoutButton = element(by.id('logout'));
+    this.newButton = element(by.css('#new a'));
   };
   
   LoginPage.prototype.get = function() {
@@ -29,6 +30,10 @@
   LoginPage.prototype.login = function(user, pass) {
     this.fillUserCredentilas(user, pass);
     this.loginButton.click();
+    var button = this.newButton;
+    browser.wait(function() {
+      return button.isDisplayed();
+    }, 5000, 'load files content');
   };
   
   LoginPage.prototype.logout = function() {
