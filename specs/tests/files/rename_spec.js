@@ -1,12 +1,15 @@
+var Page = require('../helper/page.js')
 var LoginPage = require('../pages/login.page.js');
 var FilesPage = require('../pages/files.page.js');
 
-describe('Rename', function() {
+ddescribe('Rename', function() {
   var params = browser.params;
+  var page;
   var filesPage;
   
   beforeEach(function() {
     isAngularSite(false);
+    page = new Page();
     filesPage = new FilesPage(params.baseUrl);
     filesPage.getAsUser(params.login.user, params.login.password);
   });
@@ -50,7 +53,7 @@ describe('Rename', function() {
   });
 
   it('should show alert message if newName is empty', function() {
-    filesPage.emptyRenameFile('newFolder');
+    filesPage.renameFile('newfolder.txt', "");
     browser.wait(function() {
       return(filesPage.listFiles());
     }, 3000);

@@ -1,10 +1,9 @@
 var LoginPage = require('../pages/login.page.js');
 var UserPage = require('../pages/user.page.js');
 var FilesPage = require('../pages/files.page.js');
-var FirstRunWizardPage = require('../pages/firstRunWizard.page.js');
 
 
-ddescribe('Share', function() {
+describe('Share', function() {
   var params = browser.params;
   var loginPage;
   var userPage
@@ -190,17 +189,16 @@ ddescribe('Share', function() {
 
   });
 
-  // iit('should not be possible if the "re-share" option is removed', function() {
-  //   filesPage.getAsUser(params.login.user, params.login.password);
-  //   filesPage.createNewFolder('noReshare');
-  //   filesPage.shareFile('noReshare', 'demo');
-  //   filesPage.disableReshare('noReshare', 'demo');
+  iit('should not be possible to reshare a folder, if the "re-share" option is removed', function() {
+    filesPage.getAsUser(params.login.user, params.login.password);
+    filesPage.createNewFolder('noReshare');
+    filesPage.shareFile('noReshare', 'demo');
+    filesPage.disableReshare('noReshare', 'demo');
   
-  //   loginPage.logout();
-  //   loginPage.login('demo', 'password');
+    loginPage.logout();
+    loginPage.login('demo', 'password');
 
-  //   expect(filesPage.checkReshareability('noReshare')).toBeFalsy();
-
-  // });
+    expect(filesPage.checkReshareability('noReshare')).toBeFalsy();
+  });
 
 });

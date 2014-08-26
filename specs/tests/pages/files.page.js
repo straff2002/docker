@@ -1,4 +1,5 @@
 (function() {  
+  var Page = require('../helper/page.js');
   var LoginPage = require('../pages/login.page.js');
 
   var FilesPage = function(baseUrl) {
@@ -11,10 +12,10 @@
       return url + '/?dir=%2F' + folder
     }
 
-    this.fileListId = by.css('td.filename .innernametext');
-    this.selectedFileListId = by.css('tr.searchresult td.filename .innernametext');
 
     // filelist
+    this.fileListId = by.css('td.filename .innernametext');
+    this.selectedFileListId = by.css('tr.searchresult td.filename .innernametext');
     this.firstListElem = element(by.css('#fileList tr:first-child'));
 
     // new Button and sublist
@@ -42,14 +43,38 @@
     // this.saveButton = element(by.id('editor_save'));
   };
 
+//================ LOCATOR FUNCTIONS ====================================//
+
+  FilesPage.prototype.fileListElemId = function(fileName) {
+    return by.css("tr[data-file='" + fileName + "']");
+  };
+
+  FilesPage.prototype.renameButtonId = function(fileName) {
+    return by.css("tr[data-file='" + fileName + "'] a.action.action-rename");
+  };
+
+  FilesPage.prototype.renameFormId = function(fileName) {
+    return by.css("tr[data-file='" + fileName + "'] form input");
+  };
+
+  FilesPage.prototype.shareButtonId = function(fileName) {
+    return by.css("tr[data-file='" + fileName + "'] a.action.action-share'");
+  };
+
 //================ SHARED ===============================================//
  
   FilesPage.prototype.get = function() { 
-    browser.get(this.url);
+    var filesPageUrl = this.url;
+    browser.get(filesPageUrl);
+
     var button = this.newButton;
     browser.wait(function() {
       return button.isDisplayed();
     }, 5000, 'load files content');
+
+    return browser.getCurrentUrl().then(function(url) {
+      return url != filesPageUrl;
+    });
   };
 
   FilesPage.prototype.getFolder = function(folder) {
@@ -62,16 +87,17 @@
   }
 
   FilesPage.prototype.getAsUser = function(name, pass) { 
+    // if (this.get()) {
+    //   element.(by.id("expandDisplayName")).getText(function(text) {
+    //     return text == name;
+    //   });
+    // }
     var loginPage;
     loginPage = new LoginPage(this.baseUrl);
     browser.manage().deleteAllCookies(); // logout the hard way
     loginPage.get();
     loginPage.login(name, pass);
     this.get();
-  };
-
-  FilesPage.prototype.moveMouseTo = function(elem) {
-    browser.actions().mouseMove($(elem)).perform();
   };
 
   FilesPage.prototype.listFiles = function() {
@@ -87,39 +113,48 @@
 
 //================ SHARED ACTIONS ========================================//
 
-  FilesPage.prototype.setCurrentListElem = function(name) {
-    this.setCurrentListElem = element(by.css("tr[data-file='" + name + "']"));
-  }
+  // FilesPage.prototype.setCurrentListElem = function(name) {
+  //   this.setCurrentListElem = element(by.css("tr[data-file='" + name + "']"));
+  // }
 
-  FilesPage.prototype.openRenameForm = function(name) {
-    this.moveMouseTo("tr[data-file='" + name + "']");
-    var renameId = by.css("tr[data-file='" + name + "'] a.action.action-rename");
-    element(renameId).click();
+  FilesPage.prototype.openRenameForm = function(fileName) {
+    var page = new Page();
+    var renameButton = element(this.renameButtonId(fileName));
+
+    return page.moveMouseTo(this.fileListElemId(fileName)).then(function() {
+      return renameButton.click();
+    })
   };
 
-  FilesPage.prototype.renameFile = function(name, newName) {
-    this.openRenameForm(name);
-    var renameForm = by.css("tr[data-file='"+name+"'] form input");
-    element(renameForm).sendKeys(newName);
-    element(renameForm).sendKeys(protractor.Key.ENTER);    
+  FilesPage.prototype.renameFile = function(fileName, newFileName) {
+    var renameForm = element(this.renameFormId(fileName));
+    return this.openRenameForm(fileName).then(function() {
+      for(var i=0; i<5; i++) {
+        renameForm.sendKeys(protractor.Key.DELETE)
+      };
+      renameForm
+        .sendKeys(newFileName)
+        .sendKeys(protractor.Key.ENTER);
+    });
 
-    // TODO: find correct wait trigger
-    // browser.wait(function() {
-    //  // return 
-    // });
-
-    // TODO: Timing Workaround
-    browser.sleep(800);
-
+    var renameForm = element(this.renameFormId(fileName));
+    browser.wait(function() {
+     return renameForm.isDisplayed();
+    }, 3000, 'show renameForm');
   };
 
-  FilesPage.prototype.emptyRenameFile = function(name) {
-    this.openRenameForm(name);
-    var renameForm = by.css("tr[data-file='"+name+"'] form input");
-    for(var i=0; i<5; i++) {
-      element(renameForm).sendKeys(protractor.Key.DELETE)
-    };
-    element(renameForm).sendKeys(protractor.Key.ENTER);
+  FilesPage.prototype.emptyRenameFile = function(fileName) {
+    var renameForm = element(this.renameFormId(fileName));
+
+    return this.openRenameForm(fileName).then(function() {
+       return function() { 
+          for(var i=0; i<5; i++) {
+            renameForm.sendKeys(protractor.Key.DELETE)
+          };
+        }.then(function() {
+          return renameForm.sendKeys(protractor.Key.ENTER);
+        })
+    });
   };
 
   FilesPage.prototype.takeOffSubfix = function(name, newName) {
@@ -171,16 +206,10 @@
   };
 
   FilesPage.prototype.checkReshareability = function(fileName) {
-    this.openShareForm(fileName);
-    
-    // TODO: Timing Workaround
-    browser.sleep(800);
-
-    if(false) {
-      return true
-    }else {
-      return false;
-    };
+    var shareButtonLocator = this.shareButtonId(fileName);
+    return this.moveMouseTo('tr[data-file="' + fileName + '"]').then(function() {        
+      return element(shareButtonLocator).isPresent();
+    });
   };
 
   // FilesPage.prototype.showFileVersions = function(name) {
