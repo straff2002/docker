@@ -1,7 +1,10 @@
 var LoginPage = require('../pages/login.page.js');
 var FilesPage = require('../pages/files.page.js');
 
-describe('Rename', function() {
+// ============================ RESTORE ============================================================== //
+// =================================================================================================== //
+
+ddescribe('Restore', function() {
   var params = browser.params;
   var filesPage;
   
@@ -11,14 +14,11 @@ describe('Rename', function() {
     filesPage.getAsUser(params.login.user, params.login.password);
   });
 
-  // ================== RESTORE FOLDER ===================================== //
 
-  it('should restore a emtpy folder that has been deleted', function() {
+  iit('should restore a emtpy folder that has been deleted', function() {
     // create and delete empty folder
     filesPage.createNewFolder('Empty');
-    filesPage.get(); // reload to get filesPage.listFiles() ready
     filesPage.deleteFile('Empty');
-    filesPage.get(); // reload to get filesPage.listFiles() ready
     filesPage.trashbinButton.click();
     browser.wait(function() {
       return(filesPage.listFiles());
@@ -160,5 +160,4 @@ describe('Rename', function() {
     filesPage.deleteFile('sameFileName.txt');
     filesPage.deleteFile('sameFileName.txt (Wiederhergestellt)');
   });
-
 });

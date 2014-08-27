@@ -1,6 +1,9 @@
 var LoginPage = require('../pages/login.page.js');
 var FilesPage = require('../pages/files.page.js');
 
+// ============================ SORT ================================================================= //
+// =================================================================================================== //
+
 describe('Sort', function() {
   var params = browser.params;
   var filesPage;
@@ -12,22 +15,21 @@ describe('Sort', function() {
   });
 
   it('shloud sort files by name', function() {
-    expect(filesPage.firstListElem == element(by.css('#fileList tr[data-file="documents"]'))).toBeTruthy;
+    expect(filesPage.firstListElem == element(filesPage.fileListElemId("documents"))).toBeTruthy;
     filesPage.nameSortArrow.click();
-    expect(filesPage.firstListElem == element(by.css('#fileList tr[data-file="ownCloudUserManual.pdf"]'))).toBeTruthy;
+    expect(filesPage.firstListElem == element(filesPage.fileListElemId("ownCloudUserManual.pdf"))).toBeTruthy;
   });
 
   it('should sort files by size', function() {
-    expect(filesPage.firstListElem == element(by.css('#fileList tr[data-file="documents"]'))).toBeTruthy;
+    expect(filesPage.firstListElem == element(filesPage.fileListElemId("documents"))).toBeTruthy;
     filesPage.sizeSortArrow.click();
-    expect(filesPage.firstListElem == element(by.css('#fileList tr[data-file="music"]'))).toBeTruthy;
+    expect(filesPage.firstListElem == element(filesPage.fileListElemId("music"))).toBeTruthy;
   });
 
   it('should sort files by modified date', function() {
-    expect(filesPage.firstListElem == element(by.css('#fileList tr[data-file="documents"]'))).toBeTruthy;
+    expect(filesPage.firstListElem == element(filesPage.fileListElemId("documents"))).toBeTruthy;
     filesPage.createNewTxtFile('newText')
     filesPage.modifiedSortArrow.click();
-    expect(filesPage.firstListElem == element(by.css('#fileList tr[data-file="newText.txt"]'))).toBeTruthy;
+    expect(filesPage.firstListElem == element(filesPage.fileListElemId("newText.txt"))).toBeTruthy;
   });
-
 });

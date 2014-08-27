@@ -1,6 +1,9 @@
 var LoginPage = require('../pages/login.page.js');
 var FilesPage = require('../pages/files.page.js');
 
+// ============================ SEARCH =============================================================== //
+// =================================================================================================== //
+
 describe('Search', function() {
   var params = browser.params;
   var filesPage;
@@ -11,7 +14,7 @@ describe('Search', function() {
     filesPage.getAsUser(params.login.user, params.login.password);
   });
 
-  it('should sort files by name', function() {
+  it('should search files by name', function() {
     filesPage.createNewTxtFile('searchFile');
     filesPage.createNewFolder('searchFolder');
     filesPage.searchInput.click();
@@ -20,5 +23,4 @@ describe('Search', function() {
     filesPage.deleteFile('searchFile');
     filesPage.deleteFile('searchFolder');
   });
-
 });
