@@ -29,4 +29,6 @@ php occ app:disable firstrunwizard
 
 cd $TESTS
 protractor $TESTS/protractor_conf.js --params.baseUrl=$URL --suite login
+# protractor $TESTS/protractor_conf.js --params.baseUrl=$URL --suite files
+# protractor $TESTS/protractor_conf.js --params.baseUrl=$URL --suite share
 

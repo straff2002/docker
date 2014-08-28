@@ -37,9 +37,9 @@ DATA_VOLUME_DIR="/data-vol"
 [ -d $DATA_VOLUME_DIR ] || mkdir $DATA_VOLUME_DIR
 
 echo "Restart test system"
-docker rm -f $DATA_NAME > /dev/null 2>&1
-docker rm -f $DB_NAME > /dev/null 2>&1
-docker rm -f $SERVER_NAME > /dev/null 2>&1
+docker rm -f $DATA_NAME 
+docker rm -f $DB_NAME 
+docker rm -f $SERVER_NAME 
 
 echo "Start ownCloud nginx container with mysql and persistent data"
 docker run -dv $DATA_VOLUME_DIR:/data-vol --name=$DATA_NAME $DATA_IMAGE_NAME
