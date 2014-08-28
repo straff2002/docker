@@ -16,7 +16,6 @@
     this.UserActionDropdown = element(by.id("expandDisplayName"));
 
     // filelist
-    this.fileListId = by.css('td.filename .innernametext');
     this.selectedFileListId = by.css('tr.searchresult td.filename .innernametext');
     this.firstListElem = element(by.css('#fileList tr:first-child'));
 
@@ -46,6 +45,9 @@
   };
 
 //================ LOCATOR FUNCTIONS ====================================//
+  FilesPage.prototype.fileListId = function() {
+    return by.css('td.filename .innernametext');
+  }
 
   FilesPage.prototype.fileListElemId = function(fileName) {
     return by.css("tr[data-file='" + fileName + "']");
@@ -60,11 +62,11 @@
   };
 
   FilesPage.prototype.restoreButtonId = function(id) {
-    return (by.css("#fileList tr[data-id='" + id + "'] action.action-restore"));
+    return (by.css("#fileList tr[data-id='" + id + "'] .action.action-restore"));
   };
 
   FilesPage.prototype.renameButtonId = function(fileName) {
-    return by.css("tr[data-file='" + fileName + "'] action.action-rename");
+    return by.css("tr[data-file='" + fileName + "'] .action.action-rename");
   };
 
   FilesPage.prototype.renameFormId = function(fileName) {
@@ -72,11 +74,11 @@
   };
 
   FilesPage.prototype.shareButtonId = function(fileName) {
-    return by.css("tr[data-file='" + fileName + "'] action.action-share'");
+    return by.css("tr[data-file='" + fileName + "'] .action.action-share'");
   };
 
   FilesPage.prototype.deleteButtonId = function(fileName) {
-    return by.css("tr[data-file='" + fileName +  "'] action.delete.delete-icon");
+    return by.css("tr[data-file='" + fileName +  "'] .action.delete.delete-icon");
   };
 
 //================ SHARED ===============================================//
@@ -121,9 +123,20 @@
       return button.isDisplayed();
     }, 5000, 'load files content');
   }
+  FilesPage.prototype.getSubFolder = function(folder, subFolder) {
+    folderUrl = this.folderUrl(folder) + '%2F' + subFolder;
+    console.log(folderUrl);
+    browser.get(folderUrl);
+    var button = this.newButton;
+    browser.wait(function() {
+      return button.isDisplayed();
+    }, 5000, 'load files content');
+  }
 
   FilesPage.prototype.listFiles = function() {
-    return element.all(this.fileListId).map(function(filename) {
+    // TODO: waiting to avoid "index out of bound error" 
+    browser.sleep(800);
+    return element.all(this.fileListId()).map(function(filename) {
       return filename.getText();
     });
   };
@@ -257,7 +270,7 @@
     // });
 
     // TODO: Timing Workaround
-    browser.sleep(1000);
+    browser.sleep(800);
   };
 
   FilesPage.prototype.goInToFolder = function(fileName) {

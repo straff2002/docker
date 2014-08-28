@@ -20,7 +20,7 @@ describe('Search', function() {
     filesPage.searchInput.click();
     filesPage.searchInput.sendKeys('search');
     expect(filesPage.listSelctedFiles()).toContain('searchFile', 'searchFolder');
-    filesPage.deleteFile('searchFile');
+    filesPage.deleteFile('searchFile.txt');
     filesPage.deleteFile('searchFolder');
   });
 });
