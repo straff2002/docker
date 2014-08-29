@@ -74,7 +74,7 @@
   };
 
   FilesPage.prototype.shareButtonId = function(fileName) {
-    return by.css("tr[data-file='" + fileName + "'] .action.action-share'");
+    return by.css("tr[data-file='" + fileName + "'] .action.action-share");
   };
 
   FilesPage.prototype.deleteButtonId = function(fileName) {
@@ -182,6 +182,8 @@
   };
 
   FilesPage.prototype.openShareForm = function(fileName) {
+    var page = new Page();
+
     page.moveMouseTo(this.fileListElemId(fileName));
     return element(this.shareButtonId(fileName)).click();
   };

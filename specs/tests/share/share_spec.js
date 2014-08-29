@@ -16,30 +16,24 @@ describe('Share', function() {
     filesPage = new FilesPage(params.baseUrl);
   });
 
-  it('should login as admin and create 4 new users in 2 groups', function() {
+  it('should login as admin and create 4 new users', function() {
     filesPage.getAsUser(params.login.user, params.login.password);
+    // userPage.get();
+    // userPage.createNewGroup('test_specGroup_1');
     userPage.get();
-    userPage.createNewGroup('test_specGroup_1');
-    userPage.get();
-    userPage.createNewGroup('test_specGroup_2');
+    // userPage.createNewGroup('test_specGroup_2');
     userPage.createNewUser('demo', 'password');
-    userPage.get();
     userPage.createNewUser('demo2', 'password');
-    userPage.get();
-    userPage.renameDisplayName('demo2', ' display2');
-    // setting Group to User fails cause click receives an other element
-    // userPage.setUserGroup('demo2', 'test_specGroup_1');
     userPage.createNewUser('demo3', 'password');
-    userPage.get();
-    userPage.renameDisplayName('demo3', ' display3');
-      // setting Group to User fails cause click receives an other element
-    // userPage.setUserGroup('demo3', 'test_specGroup_1');
     userPage.createNewUser('demo4', 'password');
     userPage.get();
+    userPage.renameDisplayName('demo2', ' display2');
+    userPage.renameDisplayName('demo3', ' display3');
     userPage.renameDisplayName('demo4', ' display4');
       // setting Group to User fails cause click receives an other element
+    // userPage.setUserGroup('demo2', 'test_specGroup_1');
+    // userPage.setUserGroup('demo3', 'test_specGroup_1');
     // userPage.setUserGroup('demo4', 'test_specGroup_2');
-    userPage.get();
     expect(userPage.listUser()).toContain('demo', 'demo2', 'demo3', 'demo4');
   });
 
@@ -119,7 +113,7 @@ describe('Share', function() {
 
     loginPage.logout();
     loginPage.login('demo', 'password');
-    filesPage.renameFile('inSharedBySecond.txt', 'renamedBySecond')
+    filesPage.renameFile('inSharedBySecond.txt', 'renamedBySecond.txt')
     expect(filesPage.listFiles()).toContain('renamedBySecond');
     filesPage.deleteFile('renamedBySecond.txt');
   });
@@ -189,7 +183,7 @@ describe('Share', function() {
 
   });
 
-  iit('should not be possible to reshare a folder, if the "re-share" option is removed', function() {
+  it('should not be possible to reshare a folder, if the "re-share" option is removed', function() {
     filesPage.getAsUser(params.login.user, params.login.password);
     filesPage.createNewFolder('noReshare');
     filesPage.shareFile('noReshare', 'demo');

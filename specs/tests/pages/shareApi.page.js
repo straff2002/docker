@@ -12,21 +12,15 @@
       method: "GET"
     };
   };
-  ShareApi.prototype.http = function (method, path, shareWith, shareType) {
+  ShareApi.prototype.get = function () {
     var url = this.url;
 
     var defer = protractor.promise.defer();
     console.log("Calling", this.url);
 
-    var data = "path=" + path + "&shareWith=" + shareWith + "&shareType=" + shareType; 
-
-    console.log(data);
-
-
     request({
+      method: "GET",
       uri: url,
-      method: method,
-      dody: data,
       followRedirect: true,
       auth: {
         user: "admin", 
@@ -47,7 +41,43 @@
     return defer.promise;
   };
 
+  ShareApi.prototype.create = function (path, shareWith, shareType) {
+    var url = this.url;
+
+    var defer = protractor.promise.defer();
+    console.log("Calling", this.url);
+
+    request({
+      method: "POST",
+      uri: url,
+      followRedirect: true,
+      form: {
+        path: path,
+        shareWith: shareWith,
+        shareType: shareType
+      },
+      auth: {
+        user: "admin", 
+        password: "password",
+      }
+    },
+    function(error, response) {
+      console.log("Done call to", url, "status:", response.statusCode);
+      if (error || response.statusCode >= 400) {
+          defer.reject({
+              error : error,
+              response : response
+          });
+      } else {
+          defer.fulfill(response);
+      }
+    });
+    return defer.promise;
+
+  };
+
   module.exports = ShareApi;
+
 })();
 
 
